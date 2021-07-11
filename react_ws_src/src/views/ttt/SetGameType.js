@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { GAME_TYPES } from './consts'
 
 export default class SetGameType extends Component {
 
@@ -20,7 +21,7 @@ export default class SetGameType extends Component {
 				
 				&nbsp;&nbsp;&nbsp;&nbsp;
 
-				<button type='submit' onClick={this.selTypeComp.bind(this)} className='button long'><span>Against a computer <span className='fa fa-caret-right'></span></span></button>
+				<button type='submit' onClick={this.selTypeComp.bind(this)} className='button long'><span>Against computer <span className='fa fa-caret-right'></span></span></button>
 
 			</div>
 		)
@@ -33,7 +34,7 @@ export default class SetGameType extends Component {
 		// const { onSetType } = this.props
 		// onSetType(name.value.trim())
 
-		this.props.onSetType('live')
+		this.props.onSetType(GAME_TYPES.live)
 	}
 
 //	------------------------	------------------------	------------------------
@@ -43,7 +44,7 @@ export default class SetGameType extends Component {
 		// const { onSetType } = this.props
 		// onSetType(name.value.trim())
 
-		this.props.onSetType('comp')
+		this.props.onSetType(GAME_TYPES.comp)
 	}
 
 }
