@@ -81,6 +81,14 @@ function onClientDisconnect() {
 	players.splice(players.indexOf(removePlayer), 1);
 	players_avail.splice(players_avail.indexOf(removePlayer), 1);
 
+	// if the player was playing a game i.e. had an opponent
+	if (removePlayer.opp) {
+		// add him to the available players
+		players_avail.push(removePlayer.opp);
+
+		// emit socket event to change app state
+		io.to(removePlayer.opp.sockid).emit("opp_disconnect");
+	}
 
 	if (this.status == "admin") {
 		util.log("Admin has disconnected: "+this.uid);
@@ -91,6 +99,11 @@ function onClientDisconnect() {
 	}
 
 };
+
+
+function onRestart() {
+	io.to(this.player.opp.sockid).emit("restart_game");
+}
 
 // ----	--------------------------------------------	--------------------------------------------	
 // ----	--------------------------------------------	--------------------------------------------	
@@ -108,4 +121,5 @@ set_game_sock_handlers = function (socket) {
 
 	socket.on("disconnect", onClientDisconnect);
 
+	socket.on("restart", onRestart);
 };

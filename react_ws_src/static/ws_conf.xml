@@ -13,7 +13,7 @@
 -->
 
 	<conf>
-		<ga_acc		an="UA-379313-17"		/>
+		<ga_acc		an=""		/>
 	</conf>
 
 <!--	========================	========================	========================	-->
@@ -74,7 +74,7 @@
 				<div>This is a simple X Tic Tac Toe multiplayer demo game. It's built with React.js and Node.js.</div>
 				
 				<div>
-				view source at  <a href='https://github.com/xims/X-ttt'>github.com/xims/X-ttt</a></div>
+				View source at  <a href='https://github.com/xims/X-ttt'>github.com/xims/X-ttt</a></div>
 
 				<br/>
 				<h4>For demonstration purposes.</h4>

@@ -16,7 +16,10 @@
 		"start:forever_win": "forever -c node -l logs/forever.log -o logs/out.log -e logs/err.log -a quiz.js"
 	},
 	"dependencies": {
+		"body-parser": "^1.19.0",
+		"cors": "^2.8.5",
 		"express": "^4.14.0",
-		"socket.io": "^1.4.8"
+		"socket.io": "^1.4.8",
+		"uuid": "^8.3.2"
 	}
 }

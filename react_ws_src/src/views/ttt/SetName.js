@@ -5,7 +5,9 @@ export default class SetName extends Component {
 	constructor (props) {
 		super(props)
 
-		this.state = {}
+		this.state = {
+			error: null,
+		}
 	}
 
 //	------------------------	------------------------	------------------------
@@ -17,12 +19,22 @@ export default class SetName extends Component {
 				<h1>Set Name</h1>
 
 				<div ref='nameHolder' className='input_holder left'>
-					<label>Name </label>
-					<input ref='name' type='text' className='input name' placeholder='Name' />
+					<label>Name</label>
+					<input ref='name' type='text' className='input name' placeholder='Name' onChange={this.clearError.bind(this)}/>
+
+					{this.state.error && <p>{this.state.error}</p>}
 				</div>
 
-
-				<button type='submit' onClick={this.saveName.bind(this)} className='button'><span>SAVE <span className='fa fa-caret-right'></span></span></button>
+				<button
+					type='submit'
+					onClick={this.saveName.bind(this)}
+					className='button'
+				>
+					<span>
+						SAVE{' '}
+						<span className='fa fa-caret-right' />
+					</span>
+				</button>
 
 			</div>
 		)
@@ -30,12 +42,18 @@ export default class SetName extends Component {
 
 //	------------------------	------------------------	------------------------
 
-	saveName (e) {
-		// const { name } = this.refs
-		// const { onSetName } = this.props
-		// onSetName(name.value.trim())
-
-		this.props.onSetName(this.refs.name.value.trim())
+	clearError() {
+		this.setState({ error: null });
 	}
 
+	saveName (e) {
+		const name = this.refs.name.value.trim();
+
+		if (name) {
+			this.props.onSetName(name)
+		} else {
+			this.setState({ error: 'Please enter a name'});
+			this.refs.name.focus();
+		}		
+	}
 }
