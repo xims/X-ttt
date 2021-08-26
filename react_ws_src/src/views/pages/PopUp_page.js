@@ -1,13 +1,15 @@
-import React, {Component} from 'react'
-import PopUp from '../layouts/PopUp'
+/** @format */
+
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import PopUp from "../layouts/PopUp"
 
 export default class PopUp_page extends Component {
-
-	constructor (props) {
+	constructor(props) {
 		super(props)
 	}
 
-	render () {
+	render() {
 		const { pu_page } = this.props.params
 		const page_x = app.settings.ws_conf.pgs[pu_page]
 
@@ -17,13 +19,12 @@ export default class PopUp_page extends Component {
 
 		return (
 			<PopUp pageTitle={page_x.pg_name}>
-				<div dangerouslySetInnerHTML={{__html: page_x.__cdata}} />
+				<div dangerouslySetInnerHTML={{ __html: page_x.__cdata }} />
 			</PopUp>
 		)
 	}
-
 }
 
 PopUp_page.propTypes = {
-	params: React.PropTypes.any
+	params: PropTypes.any
 }

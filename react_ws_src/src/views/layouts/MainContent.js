@@ -1,22 +1,22 @@
-import React, {Component} from 'react'
+/** @format */
+
+import React, { Component } from "react"
+import PropTypes from "prop-types"
 
 export default class MainContent extends Component {
-
-	constructor (props) {
+	constructor(props) {
 		super(props)
 	}
 
-	render () {
+	render() {
 		return (
 			<section id='main_content'>
-				<div className='main_container'>
-					{this.props.children}
-				</div>
+				<div className='main_container'>{this.props.children}</div>
 			</section>
 		)
 	}
 }
 
 MainContent.propTypes = {
-	children: React.PropTypes.any
+	children: PropTypes.any
 }

@@ -1,20 +1,20 @@
-import React, { Component} from 'react'
-import Header from './layouts/Header'
-import MainContent from './layouts/MainContent'
-import Footer from './layouts/Footer'
+/** @format */
+
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import Header from "./layouts/Header"
+import MainContent from "./layouts/MainContent"
+import Footer from "./layouts/footer/index"
 
 export default class Main extends Component {
-
-	render () {
+	render() {
 		const { popup, mainContent } = this.props
 		return (
 			<div style={fullHeight}>
-				<Header/>
-				<MainContent>
-					{ mainContent }
-				</MainContent>
+				<Header />
+				<MainContent>{mainContent}</MainContent>
 				<Footer />
-				{ popup }
+				{popup}
 			</div>
 		)
 	}
@@ -22,12 +22,12 @@ export default class Main extends Component {
 
 // property validation
 Main.propTypes = {
-	mainContent: React.PropTypes.object,
-	bottom: React.PropTypes.object,
-	popup: React.PropTypes.object
+	mainContent: PropTypes.object,
+	bottom: PropTypes.object,
+	popup: PropTypes.object
 }
 
 // full height
 const fullHeight = {
-	height: '100%'
+	height: "100%"
 }
