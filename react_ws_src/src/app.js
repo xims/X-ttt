@@ -64,7 +64,7 @@ app.extend({
 		user_types: [],
 		basket_type: null,
 		basket_total: 0,
-
+		level: null
 	},
 
 

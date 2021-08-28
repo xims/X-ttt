@@ -8,6 +8,7 @@ import SetName from "./SetName"
 import SetGameType from "./SetGameType"
 
 import GameMain from "./GameMain"
+import app from "ampersand-app"
 
 export default class Ttt extends Component {
 	constructor(props) {
@@ -29,7 +30,10 @@ export default class Ttt extends Component {
 			<section id='TTT_game'>
 				<div id='page-container'>
 					{game_step == "set_name" && (
-						<SetName onSetName={this.saveUserName.bind(this)} />
+						<SetName
+							onSetName={this.saveUserName.bind(this)}
+							onSetLevel={this.saveGameLevel.bind(this)}
+						/>
 					)}
 
 					{game_step != "set_name" && (
@@ -52,6 +56,10 @@ export default class Ttt extends Component {
 		)
 	}
 
+	saveGameLevel(level) {
+		app.settings.level = level
+		this.upd_game_step()
+	}
 	//	------------------------	------------------------	------------------------
 
 	saveUserName(n) {
