@@ -4,13 +4,14 @@ import { Link } from 'react-router'
 
 import MessageBar from '../layouts/MessageBar'
 
-export default class Header extends Component {
+// export default class Header extends Component {
+const Header = props => {
 
-	constructor (props) {
-		super(props)
-	}
+	// constructor (props) {
+	// 	super(props)
+	// }
 
-	render () {
+	// render () {
 
 		return (
 			<header id='main_header'>
@@ -50,7 +51,7 @@ export default class Header extends Component {
 
 			</header>
 		)
-	}
+	// }
 								// <li className='showMobile'>
 								// 	<Link ref='lnkMenu' className='menu no-interfere' to='' onClick={this.showHomeClicked.bind(this)}>menu</Link>
 								// </li>
@@ -79,3 +80,5 @@ Header.propTypes = {
 Header.contextTypes = {
 	router: React.PropTypes.object.isRequired
 }
+
+export default Header;

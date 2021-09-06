@@ -1,22 +1,26 @@
-import React, {Component} from 'react'
+// import React, {Component} from 'react'
+import React from 'react'
 
-export default class MainContent extends Component {
+const MainContent = ({children}) => {
 
-	constructor (props) {
-		super(props)
-	}
+	// constructor (props) {
+	// 	super(props)
+	// }
 
-	render () {
+	// render () {
 		return (
 			<section id='main_content'>
 				<div className='main_container'>
-					{this.props.children}
+					{children}
+					{/* {this.props.children} */}
 				</div>
 			</section>
 		)
-	}
+	// }
 }
 
 MainContent.propTypes = {
 	children: React.PropTypes.any
 }
+
+export default MainContent;

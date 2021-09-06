@@ -3,8 +3,9 @@ import { Link } from 'react-router'
 
 // import X_logo from '../../../static/images/X_logo.png'
 
-export default class Footer extends Component {
-	render () {
+// export default class Footer extends Component {
+const Footer = props => {
+	// render () {
 		return (
 			<footer>
 				<div className='container'>
@@ -30,5 +31,7 @@ export default class Footer extends Component {
 				</div>
 			</footer>
 		)
-	}
+	// }
 }
+
+export default Footer;

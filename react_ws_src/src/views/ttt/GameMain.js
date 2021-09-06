@@ -7,6 +7,27 @@ import TweenMax from 'gsap'
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
 
+const tableStyle = {
+	border: '1px solid black',
+	marginTop: '30px'
+}
+
+const tableHeadStyle = {
+	border: '1px solid black',
+	padding: '10px 20px',
+	backgroundColor: 'black',
+	color: 'white',
+	fontSize: '1.5rem'
+}
+
+const tableDataStyle = {
+	border: '1px solid black',
+	padding: '10px 20px',
+	textAlign: 'center',
+	fontSize: '1.5rem',
+	backgroundColor: 'white'
+}
+
 export default class SetName extends Component {
 
 	constructor (props) {
@@ -25,13 +46,16 @@ export default class SetName extends Component {
 			['c3', 'c5', 'c7']
 		]
 
-
 		if (this.props.game_type != 'live')
 			this.state = {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: true,
-				game_stat: 'Start game'
+				game_stat: 'Start game',
+				finished: false,
+				compScore: 0,
+				playerScore: 0,
+				drawScore: 0
 			}
 		else {
 			this.sock_start()
@@ -40,7 +64,11 @@ export default class SetName extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: false,
-				game_stat: 'Connecting'
+				game_stat: 'Connecting',
+				finished: false,
+				compScore: 0,
+				playerScore: 0,
+				drawScore: 0		
 			}
 		}
 	}
@@ -140,11 +168,36 @@ export default class SetName extends Component {
 					</tbody>
 					</table>
 				</div>
-
+				<table style={tableStyle}>
+					<tr>
+						<th style={tableHeadStyle}>Player</th>
+						<th style={tableHeadStyle}>Computer</th>
+						<th style={tableHeadStyle}>Draw</th>
+					</tr>
+					<tr>
+						<td style={tableDataStyle}>{this.state.playerScore}</td>
+						<td style={tableDataStyle}>{this.state.compScore}</td>
+						<td style={tableDataStyle}>{this.state.drawScore}</td>
+					</tr>
+				</table>
 				<button type='submit' onClick={this.end_game.bind(this)} className='button'><span>End Game <span className='fa fa-caret-right'></span></span></button>
+
+				{
+					this.state.finished ? (
+						<div style={{ marginLeft: '20px', display: 'inline-block' }}>
+							<button type='submit' onClick={this.play_again.bind(this)} className='button'><span>
+								Play Again 
+							<span className='fa fa-caret-right'></span></span></button>
+						</div>
+					) : null
+				}
 
 			</div>
 		)
+	}
+
+	change_color(cell_id) {
+		this.refs[cell_id].classList.remove('win')
 	}
 
 //	------------------------	------------------------	------------------------
@@ -157,6 +210,7 @@ export default class SetName extends Component {
 		if (!this.state.next_turn_ply || !this.state.game_play) return
 
 		const cell_id = e.currentTarget.id.substr(11)
+
 		if (this.state.cell_vals[cell_id]) return
 
 		if (this.props.game_type != 'live')
@@ -306,16 +360,19 @@ export default class SetName extends Component {
 
 			this.setState({
 				game_stat: (cell_vals[set[0]]=='x'?'You':'Opponent')+' win',
-				game_play: false
+				game_play: false,
+				finished: true
 			})
-
+			
+			
 			this.socket && this.socket.disconnect();
 
 		} else if (fin) {
 		
 			this.setState({
 				game_stat: 'Draw',
-				game_play: false
+				game_play: false,
+				finished: true
 			})
 
 			this.socket && this.socket.disconnect();
@@ -333,10 +390,56 @@ export default class SetName extends Component {
 //	------------------------	------------------------	------------------------
 
 	end_game () {
-		this.socket && this.socket.disconnect();
 
-		this.props.onEndGame()
+		// alert ('Are you sure you want to end the game?')
+		let optsel = confirm("Are you sure you want to end the Game?");
+
+		if (optsel) {
+			this.socket && this.socket.disconnect();
+			this.props.onEndGame()
+		} else {
+			return
+		}
 	}
+
+	play_again() {
+
+		for (let i=1; i<=9; i++) {
+			this.change_color('c' + i)
+		}
+
+		this.setState({
+			cell_vals: {},
+			next_turn_ply: true,
+			game_play: true,
+			game_stat: 'Start game',
+			finished: false
+		})
+
+		if (this.state.game_stat == 'Opponent win') {
+			this.setState({
+				compScore: this.state.compScore + 1
+			})
+		} else if(this.state.game_stat == 'You win'){
+			this.setState({
+				playerScore: this.state.playerScore + 1
+			})			
+		} else {
+			this.setState({
+				drawScore: this.state.drawScore + 1
+			})	
+		}
+
+		// this.setState({
+		// 	compScore: this.state.game_stat == 'Opponent win' ? this.state.compScore++ : this.state.compScore,
+		// 	playerScore: this.state.game_stat == 'You win' ? this.state.playerScore++ : this.state.playerScore				
+		// })
+
+		console.log(`Computer: ${this.state.compScore}, Player: ${this.state.playerScore}, Draw: ${this.state.drawScore}`)
+		// console.log(this.quantityRef)
+		// console.log(this.state.game_stat)
+	}
+
 
 
 
