@@ -128,39 +128,45 @@ section#TTT_game{
 		}
 	}
 
-	#game_board {
-			// padding: 10px;
+  //   #game_board {
+  //     // padding: 10px;
 
-		table {
-			background: #fff;
-			margin: 10px;
-		}
+  //     color: #bf0b0b !important;
+  //     i {
+  //       font-size: 3em !important;
+  //     }
 
-		td {
-			width: 130px;
-			height: 130px;
+  //     table {
+  //       background: #fff;
+  //       margin: 10px;
+  //     }
 
-			vertical-align: middle;
-			text-align: center;
+  //     td {
+  //       width: 130px;
+  //       height: 130px;
 
-			&:hover{
-				background: #ff0;
-			}
+  //       vertical-align: middle;
+  //       text-align: center;
 
-			&.win {
-				background: #f00;
-			}
-		}
+  //       &:hover {
+  //         background: #fcdada;
+  //       }
 
-		.vbrd {
-			border-left: 7px solid #000;
-			border-right: 7px solid #000;
-		}
+  //       &.win {
+  //         background: #bf0b0b;
+  //         color: #fff !important;
+  //       }
+  //     }
 
-		.hbrd {
-			border-top: 7px solid #000;
-			border-bottom: 7px solid #000;
-		}
-	}
+  //     .vbrd {
+  //       border-left: 3px solid #b4021d;
+  //       border-right: 3px solid #b4021d;
+  //     }
+
+  //     .hbrd {
+  //       border-top: 3px solid #b4021d;
+  //       border-bottom: 3px solid #b4021d;
+  //     }
+  //   }
 
 }

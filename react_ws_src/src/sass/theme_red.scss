@@ -1,0 +1,45 @@
+.themeRed {
+  $primary-color: #971612;
+  $secondary-color: #e08207;
+  background: rgba($secondary-color, 0.1);
+  #game_board {
+    // padding: 10px;
+
+    color: $primary-color !important;
+    i {
+      font-size: 3em !important;
+    }
+
+    table {
+      background: #fff;
+      margin: 10px;
+    }
+
+    td {
+      width: 130px;
+      height: 130px;
+
+      vertical-align: middle;
+      text-align: center;
+
+      &:hover {
+        background: rgba($primary-color, 0.1);
+      }
+
+      &.win {
+        background: $primary-color;
+        color: #fff !important;
+      }
+    }
+
+    .vbrd {
+      border-left: 3px solid $primary-color;
+      border-right: 3px solid $primary-color;
+    }
+
+    .hbrd {
+      border-top: 3px solid $primary-color;
+      border-bottom: 3px solid $primary-color;
+    }
+  }
+}
