@@ -1,3 +1,8 @@
+## New changes:
+- Style: I have added a multi-theme functionality, which the player will be able to switch between two different color theme
+- Beep sound: With each motion, a beep sound will be played
+- Algorithm enhancement: The main play algorithm has changed to be more clever by computer
+
 # A simple example of a full website built with React.js stack
 ## React development source and testing
 
