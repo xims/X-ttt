@@ -1,6 +1,8 @@
 var path = require('path')
 var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+var CopyWebpackPlugin = require('copy-webpack-plugin')
+
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
     // context: path.join(__dirname, 'static'),
@@ -11,14 +13,19 @@ module.exports = {
     ],
     output: {
         path: path.join(__dirname, 'dist'),
+
         filename: 'bundle.js',
-        // publicPath: path.join(__dirname, 'static'),
-        // publicPath: __dirname + '/static/',
         publicPath: '/',
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
+        new CopyWebpackPlugin([
+            {
+                from: path.resolve(__dirname, 'src/static/images'),
+                to: 'images/',
+            },
+        ]),
         new HtmlWebpackPlugin({
             title: 'XXT',
             filename: 'index.html',
@@ -41,9 +48,12 @@ module.exports = {
     module: {
         loaders: [
             {
-                test: /\.(ico|css|gif|png|html|jpg|xml|svg)$/,
-                // loader: 'url?limit=10000',
-                loader: 'file?name=[path][name].[ext]&context=./static',
+                test: /\.(xml)$/,
+                loader: 'file?name=[name].[ext]',
+            },
+            {
+                test: /\.(ico|gif|png|html|jpg|swf|svg)$/,
+                loader: 'file?name=[path][name].[ext]',
             },
             {
                 test: /\.jsx?/,

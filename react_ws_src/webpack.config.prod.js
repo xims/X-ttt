@@ -2,6 +2,8 @@ var path = require('path')
 var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+var CopyWebpackPlugin = require('copy-webpack-plugin')
+
 module.exports = {
     devtool: 'source-map',
     entry: ['../src/app'],
@@ -24,6 +26,12 @@ module.exports = {
                 warnings: false,
             },
         }),
+        new CopyWebpackPlugin([
+            {
+                from: path.resolve(__dirname, 'src/static/images'),
+                to: 'images/',
+            },
+        ]),
         new HtmlWebpackPlugin({
             title: 'XXT',
             filename: 'index.html',
@@ -46,7 +54,11 @@ module.exports = {
     module: {
         loaders: [
             {
-                test: /\.(ico|gif|png|html|jpg|swf|xml|svg)$/,
+                test: /\.(xml)$/,
+                loader: 'file?name=[name].[ext]',
+            },
+            {
+                test: /\.(ico|gif|png|html|jpg|swf|svg)$/,
                 loader: 'file?name=[path][name].[ext]',
             },
             {

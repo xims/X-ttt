@@ -1,35 +1,35 @@
-var path = require('path');
-var express = require('express');
-var webpack = require('webpack');
-var config = require('./webpack.config.dev');
+//externals
+var path = require('path')
+var express = require('express')
+var webpack = require('webpack')
+var webpackDevMiddleware = require('webpack-dev-middleware')
+var proxy = require('proxy-middleware')
+var url = require('url')
 
-var app = express();
-var compiler = webpack(config);
+// local webpack dev config
+var config = require('./webpack.config.dev')
 
-app.use(require('webpack-dev-middleware')(compiler, {
-	noInfo: true,
-	publicPath: config.output.publicPath
-}));
+// express vars
+var app = express()
+var compiler = webpack(config)
+var port = process.env.PORT || 3000
 
-app.use(require('webpack-hot-middleware')(compiler));
+app.use(
+    webpackDevMiddleware(compiler, {
+        noInfo: true,
+        publicPath: config.output.publicPath,
+    })
+)
 
-// app.use(express.static(paths.client('images')))
-// app.use(express.static('static'))
+// handle any route to send index.html response
+app.get('*', function (res) {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+})
 
-var proxy = require('proxy-middleware');
-var url = require('url');
-// app.use('/images', proxy(url.parse('../WS/images')));
-// app.use('/img', proxy(url.parse('../WS/img')));
-app.use('/images', proxy(url.parse('http://z2/projs/kisla/X-react-starter/dev/WS/images')));
-
-app.get('*', function(req, res) {
-	res.sendFile(path.join(__dirname, 'static', 'index.html'));
-});
-
-app.listen(3000, '0.0.0.0', function(err) {
-	if (err) {
-		console.log(err);
-		return;
-	}
-	console.log('Listening at http://0.0.0.0:3000');
-});
+app.listen(port, function (err) {
+    if (err) {
+        console.log(err)
+        return
+    }
+    console.log('Listening on: ' + port)
+})
