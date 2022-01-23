@@ -1,31 +1,65 @@
-# A simple example of a full multiplayer game web app built with React.js and Node.js stack
+# XTTT
 
-Major libraries used on front end:
-- react
-- webpack
-- babel
-- react-router
-- ampersand
-- sass
-- jest
+A simple example of a full multiplayer game web app built with React.js and Node.js stack
 
-Major libraries used on server:
-- node.js
-- socket.io
-- express
+## Quick start
 
-### Folder structure:
-- **WS** - server side and compiled front end
-- **react_ws_src** - React development source and testing
+The following command will create a build folder and copy it to xttt-server/public and serve it on http://localhost:3001
+
+```sh
+cd xttt-client
+npm run b-sl
+```
 
 ---
 
-### View it online at 
-https://x-ttt.herokuapp.com/
+### Key changes from xims/X-ttt fork
 
-#### Configurable with external XML file - 
+-   fixes... npm i && npm run!
+-   webpack builds html file during build time
+-   webpack includes ws_conf.xml from src/ during build time
+-   webpack copys src/static/images/\* during build time
+-   webpack creates build folder
+-   project tidy, gitignore, naming conventions..
+-   xttt-server player migrated to class with default export
+
+---
+
+## Major libraries used on front end:
+
+-   react
+-   webpack
+-   babel
+-   react-router
+-   ampersand
+-   sass
+-   jest
+
+---
+
+## Major libraries used on server:
+
+-   node.js
+-   socket io
+-   express
+
+---
+
+### Folder structure:
+
+-   **xttt-server** - server side and compiled front end
+-   **xttt-client** - React development source and testing
+
+---
+
+### View it online at
+
+## https://x-ttt.herokuapp.com/
+
+#### Configurable with external XML file -
+
 https://x-ttt.herokuapp.com/ws_conf.xml
 
 ---
 
-##For demonstration purposes only.
+## **...For demonstration purposes only! 👨‍💻👩‍💻**
