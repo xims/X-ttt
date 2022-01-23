@@ -5,15 +5,13 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
-    // context: path.join(__dirname, 'static'),
     entry: [
         'eventsource-polyfill', // necessary for hot reloading with IE
         'webpack-hot-middleware/client',
         './src/app',
     ],
     output: {
-        path: path.join(__dirname, 'dist'),
-
+        path: path.join(__dirname, 'build/public'),
         filename: 'bundle.js',
         publicPath: '/',
     },

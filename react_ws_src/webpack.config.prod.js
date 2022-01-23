@@ -5,11 +5,10 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-    devtool: 'source-map',
     entry: ['../src/app'],
-    context: path.join(__dirname, 'static'),
+    context: path.join(__dirname, 'src'),
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(__dirname, 'build/public'),
         filename: 'bundle.js',
         publicPath: './',
     },

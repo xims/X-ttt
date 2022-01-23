@@ -13,15 +13,12 @@
         "start": "node devServer.js",
         "lint": "eslint src",
         "test": "jest --coverage",
-        "clean": "rimraf dist",
+        "clean": "rimraf build",
         "build": "npm run clean && npm run build:webpack",
         "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
         "build:webpack_dev": "cross-env NODE_ENV=development webpack --config webpack.config.prod.js",
-        "bc": "npm run build && npm run build:copyall_win",
-        "bu": "npm run build && npm run build:copyupd_win",
-        "bv": "npm version patch",
-        "build:copyall_win": "xcopy dist\\* ..\\WS\\public /E /Y /D && xcopy static\\* ..\\WS\\public /E /Y /D",
-        "build:copyupd_win": "copy dist\\bundle.js ..\\WS\\public\\ && copy dist\\style.css ..\\WS\\public\\"
+        "b-srvr": "npm run build && npm run sync",
+        "sync": "rmdir ../WS/public; cp -R build/public/ ../WS/public"
     },
     "dependencies": {
         "ampersand-app": "^2.0.0",

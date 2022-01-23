@@ -8,6 +8,7 @@ var url = require('url')
 
 // local webpack dev config
 var config = require('./webpack.config.dev')
+const { dirname } = require('path')
 
 // express vars
 var app = express()
@@ -21,9 +22,11 @@ app.use(
     })
 )
 
-// handle any route to send index.html response
-app.get('*', function (res) {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+// any route will index.html served from
+
+
+app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build/public', 'index.html'))
 })
 
 app.listen(port, function (err) {
