@@ -13,11 +13,6 @@ var game = require('./src/XtttGame.js')
 // allocate port
 var port = process.env.PORT || 3001
 
-// game vars
-Player = require('./src/Player').Player // Player class
-players = [] // Array of connected players
-players_avail = []
-
 server.listen(port, function (err) {
     if (err) console.log(err)
     console.log('Server listening at http://localhost:' + port)
@@ -30,4 +25,5 @@ app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'))
 })
 
+// handle game socket events
 io.on('connection', game.set_game_sock_handlers)
