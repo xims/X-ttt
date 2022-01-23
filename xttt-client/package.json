@@ -17,8 +17,9 @@
         "build": "npm run clean && npm run build:webpack",
         "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
         "build:webpack_dev": "cross-env NODE_ENV=development webpack --config webpack.config.prod.js",
+        "sync": "rmdir ../xttt-server/public; cp -R build/public/ ../xttt-server/public",
         "b-srvr": "npm run build && npm run sync",
-        "sync": "rmdir ../WS/public; cp -R build/public/ ../WS/public"
+        "b-sl": "npm run build && npm run sync && cd ../xttt-server/ && npm start"
     },
     "dependencies": {
         "ampersand-app": "^2.0.0",
