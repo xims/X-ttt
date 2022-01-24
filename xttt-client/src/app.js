@@ -44,6 +44,7 @@ let renderSite = function () {
                     components={{ mainContent: ErrorPage }}
                 />
 
+                {/* this is never reached */}
                 <Route path="*" components={{ mainContent: ErrorPage }} />
             </Route>
         </Router>,
