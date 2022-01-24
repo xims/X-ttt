@@ -22,6 +22,8 @@ npm run b-sl
 -   webpack creates build folder
 -   project tidy, gitignore, naming conventions..
 -   xttt-server player migrated to class with default export
+-   handle socket error on client - expose single player UI btn
+-   handle game waiting state on client
 
 ---
 
