@@ -113,7 +113,7 @@
 				</ul>
 
 				<br/>
-				<h3>Configurable with external XML file - <a href="./ws_conf.xml" target='blank'>ws_conf.xml</a></h3>
+				<h3>Configurable with external XML file - <a href="/ws_conf.xml" target='blank'>ws_conf.xml</a></h3>
 
 				<br/><br/>
 				<h2>For demonstration purposes.</h2>
