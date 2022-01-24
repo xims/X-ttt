@@ -23,7 +23,10 @@ npm run b-sl
 -   project tidy, gitignore, naming conventions..
 -   xttt-server player migrated to class with default export
 -   handle socket error on client - expose single player UI btn
--   handle game waiting state on client
+-   handle game waiting for player state on client
+-   Add leaderboard with player names / score count
+-   Add rematch btn at end of round
+-   styling fixes across mobile
 
 ---
 
