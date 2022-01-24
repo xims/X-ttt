@@ -22,13 +22,13 @@ body {
     // overflow:hidden;
 }
 #root {
-    height: 100%;
+    min-height: 100vh;
     min-width: 300px;
+    width: 100%;
+    position: absolute;
 }
 #main_content {
-    padding-top: 90px;
-    padding-bottom: 45px;
-    //overflow:scroll;
-    min-height: 100%;
-    // overflow:hidden;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    min-height: 100vh;
 }
