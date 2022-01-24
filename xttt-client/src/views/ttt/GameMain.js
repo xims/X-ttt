@@ -135,8 +135,8 @@ export default class GameMain extends Component {
 
     render() {
         const { cell_vals } = this.state
-        // console.log(cell_vals)
-
+        let btnText
+        this.state.game_play ? (btnText = 'Quit ') : (btnText = 'Rematch! ')
         return (
             <div id="GameMain">
                 {this.state.error && (
@@ -160,11 +160,12 @@ export default class GameMain extends Component {
                         </div>
                     </div>
                 )}
-                {!this.state.error && this.state.waiting ? (
+                {!this.state.error && this.state.waiting && (
                     <div>
                         waiting for another to join! waiting{this.state.waiting}
                     </div>
-                ) : (
+                )}
+                {this.state.start && (
                     <div>
                         {/* <h1>Play {this.props.game_type}</h1> */}
 
@@ -275,7 +276,7 @@ export default class GameMain extends Component {
                             className="button"
                         >
                             <span>
-                                End Game{' '}
+                                {btnText}
                                 <span className="fa fa-caret-right"></span>
                             </span>
                         </button>
