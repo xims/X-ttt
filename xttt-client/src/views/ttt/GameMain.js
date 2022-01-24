@@ -1,9 +1,11 @@
-import React, { Component, Fragment } from 'react'
-
+// externals
+import React, { Component } from 'react'
 import io from 'socket.io-client'
-
 import TweenMax from 'gsap'
 
+//componets
+import LeaderBoard from '../../components/Leaderboard'
+// helpers
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
 
@@ -32,6 +34,9 @@ export default class GameMain extends Component {
                 game_stat: 'Start game',
                 waiting: false,
                 start: true,
+                opponent: 'CPU',
+                playerOneWins: 0,
+                playerTwoWins: 0,
             }
         else {
             this.sock_start()
@@ -41,6 +46,8 @@ export default class GameMain extends Component {
                 next_turn_ply: true,
                 error: false,
                 waiting: true,
+                playerOneWins: 10,
+                playerTwoWins: 0,
             }
         }
     }
@@ -100,6 +107,7 @@ export default class GameMain extends Component {
                     game_stat: 'Playing with ' + data.opp.name,
                     waiting: false,
                     start: true,
+                    opponent: data.opp.name,
                 })
             }.bind(this)
         )
@@ -270,16 +278,44 @@ export default class GameMain extends Component {
                             </table>
                         </div>
 
-                        <button
-                            type="submit"
-                            onClick={this.end_game.bind(this)}
-                            className="button"
+                        <LeaderBoard
+                            playerOne={this.props.playerOne}
+                            playerTwo={this.state.opponent}
+                            playerOneWins={this.state.playerOneWins}
+                            playerTwoWins={this.state.playerTwoWins}
+                        />
+
+                        <div
+                            className="btn-container"
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                            }}
                         >
-                            <span>
-                                {btnText}
-                                <span className="fa fa-caret-right"></span>
-                            </span>
-                        </button>
+                            <button
+                                type="submit"
+                                onClick={this.end_game.bind(this)}
+                                className="button"
+                            >
+                                <span>
+                                    Quit{' '}
+                                    <span className="fa fa-caret-right"></span>
+                                </span>
+                            </button>
+
+                            {!this.state.game_play && (
+                                <button
+                                    type="submit"
+                                    onClick={this.rematch.bind(this)}
+                                    className="button"
+                                >
+                                    <span>
+                                        Play again{' '}
+                                        <span className="fa fa-caret-right"></span>
+                                    </span>
+                                </button>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>
@@ -449,6 +485,14 @@ export default class GameMain extends Component {
             TweenMax.killAll(true)
             TweenMax.from('td.win', 1, { opacity: 0, ease: Linear.easeIn })
 
+            if (cell_vals[set[0]] == 'x') {
+                console.log('you win')
+                this.setState({ playerOneWins: this.state.playerOneWins + 1 })
+            } else {
+                console.log('you lose')
+                this.setState({ playerTwoWins: this.state.playerTwoWins + 1 })
+            }
+
             this.setState({
                 game_stat:
                     (cell_vals[set[0]] == 'x' ? 'You' : 'Opponent') + ' win',
@@ -475,6 +519,23 @@ export default class GameMain extends Component {
     }
 
     //	------------------------	------------------------	------------------------
+
+    rematch() {
+        this.setState({
+            cell_vals: {},
+            next_turn_ply: true,
+            game_play: true,
+            game_stat: 'Start game',
+            waiting: false,
+            start: true,
+        })
+
+        var ele = document.getElementsByClassName('win')
+
+        while (ele.length) {
+            ele[0].classList.remove('win')
+        }
+    }
 
     end_game() {
         this.socket && this.socket.disconnect()
