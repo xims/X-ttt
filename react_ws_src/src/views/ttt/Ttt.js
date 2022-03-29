@@ -39,9 +39,11 @@ export default class Ttt extends Component {
 
 					{game_step == 'set_game_type' && <SetGameType 
 														onSetType={this.saveGameType.bind(this)} 
+														onSetCompLevel={this.saveCompLevel.bind(this)}
 													/>}
 					{game_step == 'start_game' && <GameMain 
 														game_type={this.state.game_type}
+														comp_level={this.state.comp_level}
 														onEndGame={this.gameEnd.bind(this)} 
 													/>}
 
@@ -65,6 +67,12 @@ export default class Ttt extends Component {
 		this.state.game_type = t
 
 		this.upd_game_step()
+	}
+
+	saveCompLevel(level) {
+		this.state.comp_level = level;
+
+		this.upd_game_step();
 	}
 
 //	------------------------	------------------------	------------------------

@@ -105,7 +105,13 @@ section#TTT_game{
 
 		&.long {
 			width: 300px;
-		}	
+		}
+
+		&.danger {
+			background-color: $colorDanger200;
+			border: 1px solid $colorSecondaryDark;
+			color: $colorSecondaryDark;
+		}
 	}
 
 	#game_stat {

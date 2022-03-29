@@ -5,7 +5,9 @@ export default class SetGameType extends Component {
 	constructor (props) {
 		super(props)
 
-		this.state = {}
+		this.state = {
+			level: 1
+		}
 	}
 
 //	------------------------	------------------------	------------------------
@@ -21,6 +23,10 @@ export default class SetGameType extends Component {
 				&nbsp;&nbsp;&nbsp;&nbsp;
 
 				<button type='submit' onClick={this.selTypeComp.bind(this)} className='button long'><span>Against a computer <span className='fa fa-caret-right'></span></span></button>
+
+				&nbsp;&nbsp;&nbsp;&nbsp;
+
+				<button type='submit' onClick={this.selCompLevel.bind(this)} className='button long danger'><span>Medium difficulty computer <span className='fa fa-caret-right'></span></span></button>
 
 			</div>
 		)
@@ -43,7 +49,19 @@ export default class SetGameType extends Component {
 		// const { onSetType } = this.props
 		// onSetType(name.value.trim())
 
+		this.props.onSetType('comp');
+		this.props.onSetCompLevel(1);
+	}
+
+//	------------------------	------------------------	------------------------
+
+	selCompLevel (e) {
+		// const { name } = this.refs
+		// const { onSetType } = this.props
+		// onSetType(name.value.trim())
+
 		this.props.onSetType('comp')
+		this.props.onSetCompLevel(3);
 	}
 
 }

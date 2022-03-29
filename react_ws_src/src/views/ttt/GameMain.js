@@ -23,15 +23,29 @@ export default class SetName extends Component {
 
 			['c1', 'c5', 'c9'],
 			['c3', 'c5', 'c7']
-		]
+		];
 
+		this.compMovesMappings = {
+			c1: { c2: "c3", c5: "c9", c4: "c7", c9: "c5", c3: "c2", c7: "c4" },
+			c3: { c2: "c1", c5: "c7", c6: "c9", c7: "c5", c1: "c2", c9: "c6" },
+			c5: { c1: "c9", c9: "c1", c3: "c7", c7: "c3", c4: "c6", c6: "c4", c2: "c8", c8: "c2" },
+			c7: { c5: "c3", c4: "c1", c8: "c9", c3: "c5", c9: "c8", c1: "c4" },
+			c9: { c5: "c1", c8: "c7", c6: "c3", c1: "c5", c7: "c8", c3: "c6" },
+		
+			c2: { c1: "c3", c3: "c1", c5: "c8", c8: "c5" },
+			c4: { c1: "c7", c7: "c1", c5: "c6", c6: "c5" },
+			c6: { c3: "c9", c9: "c3", c5: "c4", c4: "c5" },
+			c8: { c7: "c9", c9: "c7", c5: "c2", c2: "c5" }
+		};
 
 		if (this.props.game_type != 'live')
 			this.state = {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: true,
-				game_stat: 'Start game'
+				game_stat: 'Start game',
+				player_prev_move: undefined,
+				player_cur_move: undefined
 			}
 		else {
 			this.sock_start()
@@ -112,7 +126,7 @@ export default class SetName extends Component {
 		return (
 			<div id='GameMain'>
 
-				<h1>Play {this.props.game_type}</h1>
+				<h1>Play {this.props.game_type} | Level = {this.props.comp_level === 3 ? "Medium" : "Easy" } </h1>
 
 				<div id="game_stat">
 					<div id="game_stat_msg">{this.state.game_stat}</div>
@@ -173,6 +187,7 @@ export default class SetName extends Component {
 		let { cell_vals } = this.state
 
 		cell_vals[cell_id] = 'x'
+		this.state.player_cur_move = cell_id;
 
 		TweenMax.from(this.refs[cell_id], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
@@ -190,6 +205,23 @@ export default class SetName extends Component {
 	}
 
 //	------------------------	------------------------	------------------------
+	find_best_move(playerCurrentMove, board, emptyCells) {
+		
+		const occupiedCells = Object.keys(board);
+		const cellAdjacentMoves = this.compMovesMappings[playerCurrentMove]; // possible cell for comp
+
+		// filter occupied cells matching with adjacent cells of player move 
+		const occupiedAdjacentMoves = Object.keys(cellAdjacentMoves)
+											.filter(m => occupiedCells.includes(m));
+
+		// find empty cells based on adjacent moves
+		const bestMove = occupiedAdjacentMoves.filter(m => emptyCells.includes(cellAdjacentMoves[m]));
+
+		// if no match found, then return an empty cell or the best move
+		return bestMove.length === 0 
+				? emptyCells[0] 
+				: cellAdjacentMoves[bestMove[0]];
+	}
 
 	turn_comp () {
 
@@ -199,9 +231,11 @@ export default class SetName extends Component {
 
 		for (let i=1; i<=9; i++) 
 			!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
-		// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
 
-		const c = rand_arr_elem(empty_cells_arr)
+		const c = (this.props.comp_level === 1) 
+					? rand_arr_elem(empty_cells_arr)
+					: this.find_best_move(this.state.player_cur_move, cell_vals, empty_cells_arr);
+
 		cell_vals[c] = 'o'
 
 		TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
@@ -213,6 +247,7 @@ export default class SetName extends Component {
 		// })
 
 		this.state.cell_vals = cell_vals
+		this.state.player_prev_move = this.state.player_cur_move;
 
 		this.check_turn()
 	}
