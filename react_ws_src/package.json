@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "node devServer.js",
-    "lint": "eslint src",
+    "lint": "eslint src --fix && prettier --write '/src/**/*.{ts,js,css,html}'",
     "test": "jest --coverage",
     "clean": "rimraf dist",
     "build": "npm run clean && npm run build:webpack",
@@ -60,6 +60,7 @@
     "imports-loader": "^0.6.5",
     "jest-cli": "^13.2.3",
     "node-sass": "^7.0.1",
+    "prettier": "2.6.2",
     "proxy-middleware": "^0.15.0",
     "react-addons-test-utils": "^15.2.0",
     "rimraf": "^2.5.3",

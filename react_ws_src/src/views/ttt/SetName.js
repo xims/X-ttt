@@ -1,41 +1,63 @@
-import React, {Component} from 'react'
+import React, { Component } from "react";
 
 export default class SetName extends Component {
+  constructor(props) {
+    super(props);
 
-	constructor (props) {
-		super(props)
+    this.state = {
+      hasError: false,
+      value: "",
+    };
 
-		this.state = {}
-	}
+    this.handleChange = this.handleChange.bind(this);
+  }
+  //	------------------------	------------------------	------------------------
 
-//	------------------------	------------------------	------------------------
+  render() {
+    return (
+      <div id="SetName">
+        <h1>Set Name</h1>
 
-	render () {
-		return (
-			<div id='SetName'>
+        <div ref="nameHolder" className="input_holder left">
+          <label>Name </label>
+          <input
+            onChange={this.handleChange}
+            type="text"
+            className="input name"
+            placeholder="Name"
+          />
+          {this.state.hasError && (
+            <span className="error">Please enter a name to start.</span>
+          )}
+        </div>
 
-				<h1>Set Name</h1>
+        <button
+          type="submit"
+          onClick={this.saveName.bind(this)}
+          className="button"
+        >
+          <span>
+            SAVE <span className="fa fa-caret-right"></span>
+          </span>
+        </button>
+      </div>
+    );
+  }
 
-				<div ref='nameHolder' className='input_holder left'>
-					<label>Name </label>
-					<input ref='name' type='text' className='input name' placeholder='Name' />
-				</div>
+  //	------------------------	------------------------	------------------------
 
+  handleChange(event) {
+    this.setState({ value: event.target.value.trim(), hasError: false });
+  }
 
-				<button type='submit' onClick={this.saveName.bind(this)} className='button'><span>SAVE <span className='fa fa-caret-right'></span></span></button>
+  saveName(e) {
+    if (this.state.value === "") {
+      this.setState((state) => {
+        return { value: state.value, hasError: true };
+      });
+      return;
+    }
 
-			</div>
-		)
-	}
-
-//	------------------------	------------------------	------------------------
-
-	saveName (e) {
-		// const { name } = this.refs
-		// const { onSetName } = this.props
-		// onSetName(name.value.trim())
-
-		this.props.onSetName(this.refs.name.value.trim())
-	}
-
+    this.props.onSetName(this.state.value);
+  }
 }

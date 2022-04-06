@@ -94,7 +94,12 @@ section#TTT_game{
 		  border: 1px solid $colorSecondary;
 		  //box-shadow:0px 4px 0px 0px $colorSecondary;
 		  color: $colorSecondary;
-		}			
+		}	
+		
+		.error {
+			font-size: 12px;
+			color: $colorSecondaryDark;
+		}
 	}
 
 	.button {
@@ -152,14 +157,17 @@ section#TTT_game{
 			}
 		}
 
-		.vbrd {
-			border-left: 7px solid #000;
-			border-right: 7px solid #000;
-		}
-
-		.hbrd {
-			border-top: 7px solid #000;
-			border-bottom: 7px solid #000;
+		tr {
+			&:nth-child(2) {
+				td {
+					border-bottom: 7px solid #000;
+					border-top: 7px solid #000;
+				}
+			}
+			td:nth-child(2) {
+				border-left: 7px solid #000;
+				border-right: 7px solid #000;
+			}
 		}
 	}
 

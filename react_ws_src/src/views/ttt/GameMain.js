@@ -12,6 +12,12 @@ export default class SetName extends Component {
 	constructor (props) {
 		super(props)
 
+		this.board = [
+			[1, 2, 3],
+			[4, 5, 6],
+			[7, 8, 9],
+		]
+
 		this.win_sets = [
 			['c1', 'c2', 'c3'],
 			['c4', 'c5', 'c6'],
@@ -23,6 +29,19 @@ export default class SetName extends Component {
 
 			['c1', 'c5', 'c9'],
 			['c3', 'c5', 'c7']
+		]
+
+		this.win_map = [
+			{'c1':null, 'c2':null, 'c3':null, filled: 0},
+			{'c4':null, 'c5':null, 'c6':null, filled: 0},
+			{'c7':null, 'c8':null, 'c9':null, filled: 0},
+
+			{'c1':null, 'c4':null, 'c7':null, filled: 0},
+			{'c2':null, 'c5':null, 'c8':null, filled: 0},
+			{'c3':null, 'c6':null, 'c9':null, filled: 0},
+
+			{'c1':null, 'c5':null, 'c9':null, filled: 0},
+			{'c3':null, 'c5':null, 'c7':null, filled: 0}
 		]
 
 
@@ -122,21 +141,17 @@ export default class SetName extends Component {
 				<div id="game_board">
 					<table>
 					<tbody>
-						<tr>
-							<td id='game_board-c1' ref='c1' onClick={this.click_cell.bind(this)}> {this.cell_cont('c1')} </td>
-							<td id='game_board-c2' ref='c2' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c2')} </td>
-							<td id='game_board-c3' ref='c3' onClick={this.click_cell.bind(this)}> {this.cell_cont('c3')} </td>
-						</tr>
-						<tr>
-							<td id='game_board-c4' ref='c4' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c4')} </td>
-							<td id='game_board-c5' ref='c5' onClick={this.click_cell.bind(this)} className="vbrd hbrd"> {this.cell_cont('c5')} </td>
-							<td id='game_board-c6' ref='c6' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c6')} </td>
-						</tr>
-						<tr>
-							<td id='game_board-c7' ref='c7' onClick={this.click_cell.bind(this)}> {this.cell_cont('c7')} </td>
-							<td id='game_board-c8' ref='c8' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c8')} </td>
-							<td id='game_board-c9' ref='c9' onClick={this.click_cell.bind(this)}> {this.cell_cont('c9')} </td>
-						</tr>
+						{this.board.map((items, index) => (
+							<tr key={index}>
+								{items.map((cell) => {
+									const itemCont = `c${cell}`;
+									return (
+									<td key={itemCont} id={`game_board-${itemCont}`} ref={itemCont} onClick={this.click_cell.bind(this)}> 
+										{this.cell_cont(itemCont)} 
+									</td>
+								)})}
+							</tr>
+						))}
 					</tbody>
 					</table>
 				</div>
@@ -173,6 +188,7 @@ export default class SetName extends Component {
 		let { cell_vals } = this.state
 
 		cell_vals[cell_id] = 'x'
+		this.set_move(cell_id, 'x');
 
 		TweenMax.from(this.refs[cell_id], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
@@ -190,21 +206,67 @@ export default class SetName extends Component {
 	}
 
 //	------------------------	------------------------	------------------------
+	set_move (cell, player) {
+		this.win_map.map((item) => {
+			if (item.hasOwnProperty(cell)) {
+        		item[cell] = player;
+				item.filled++;
+      		}
+		});
+	}
 
 	turn_comp () {
 
 		let { cell_vals } = this.state
-		let empty_cells_arr = []
 
+		let selectedCellX = null;
+		let selectedCellO = null;
+		let selectedCell = null;
+		let emptyCells = [];
+		this.win_map.forEach((item) => {
+			if (item.filled > 1) { // possible to lose or win
+				let xCount = 0;
+				let oCount = 0;
+				Object.keys(item).forEach((key) => {
+					if(item[key] === 'x') xCount++;
+					if(item[key] === 'o') oCount++;
+					if(item[key] === null){
+						selectedCell = key;
+					}
+				})
+				if (xCount > 1 ) { // prevent losing or win the game
+					selectedCellX = selectedCell;
+				}
+				if ( oCount > 1 ) { // prevent losing or win the game
+					selectedCellO = selectedCell;
+				}
+			} 
+			
+		});
 
-		for (let i=1; i<=9; i++) 
-			!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
-		// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
+		if (selectedCellX) { // first priority
+			selectedCell = selectedCellX;
+    	} else if (selectedCellO){
+			selectedCell = selectedCellO;
+		}
+		if (!selectedCell) {
+			this.win_map.find((item) => {
+				Object.keys(item).forEach((key) => {
+					if (item[key] === null) {
+						emptyCells.push(key);
+					}
+				});
+				if (emptyCells.includes('c5')) {
+					return selectedCell = 'c5';
+				}
+			});
+			selectedCell = rand_arr_elem(emptyCells);
+		}
 
-		const c = rand_arr_elem(empty_cells_arr)
-		cell_vals[c] = 'o'
-
-		TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
+		cell_vals[selectedCell] = 'o'
+		this.set_move(selectedCell, 'o');
+        
+		TweenMax.from(this.refs[selectedCell], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
 
 		// this.setState({
