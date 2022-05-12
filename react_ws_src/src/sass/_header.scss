@@ -46,14 +46,14 @@ header#main_header {
 	
 
 		a.main-site-name {
-			width: 600px;
+			// width: 600px;
 			position: absolute;
 			left: 0;
 			right: 0;
 			top: 18px;
 			bottom:0;
-			margin-left: 250px;
-			margin-right: 150px;
+			margin-left: auto;
+			margin-right: auto;
 			display: block;
 			// color: #fff;
 			font-family: $hdrFont;
