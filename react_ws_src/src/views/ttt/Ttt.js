@@ -43,6 +43,7 @@ export default class Ttt extends Component {
 					{game_step == 'start_game' && <GameMain 
 														game_type={this.state.game_type}
 														onEndGame={this.gameEnd.bind(this)} 
+														onPlayAgain={this.playAgain.bind(this)} 
 													/>}
 
 				</div>
@@ -75,6 +76,10 @@ export default class Ttt extends Component {
 		this.upd_game_step()
 	}
 
+  playAgain (t) {
+		this.upd_game_step(true)
+	}
+
 //	------------------------	------------------------	------------------------
 //	------------------------	------------------------	------------------------
 
@@ -87,9 +92,11 @@ export default class Ttt extends Component {
 
 //	------------------------	------------------------	------------------------
 
-	set_game_step () {
+	set_game_step (restart = false) {
 
-		if (!app.settings.curr_user || !app.settings.curr_user.name)
+		if (restart)
+      return 'start_game'
+    else if (!app.settings.curr_user || !app.settings.curr_user.name)
 			return 'set_name'
 		else if (!this.state.game_type)
 			return 'set_game_type'

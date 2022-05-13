@@ -30,3 +30,17 @@ html, body {
 	min-height:100%;
 	// overflow:hidden;
 }
+
+/*flex wraps*/
+.flexrowstart { display: flex; flex-direction: row; align-items: flex-start; }
+ul.flexrowstart {
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  padding-inline-start: 0;
+}
+.flexitemauto { flex: 1 1 auto; }
+.flexitemnone { flex: 0 0 auto; }
+.centre-centre { align-items: stretch; align-self: center; text-align: center; }
+.centre-left { align-items: stretch; align-self: center; text-align: left; }
+.centre-right { align-items: stretch; align-self: center; text-align: right; }

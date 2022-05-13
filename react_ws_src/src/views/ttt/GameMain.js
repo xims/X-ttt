@@ -7,6 +7,8 @@ import TweenMax from 'gsap'
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
 
+import Score from './Score'
+
 export default class SetName extends Component {
 
 	constructor (props) {
@@ -31,7 +33,12 @@ export default class SetName extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: true,
-				game_stat: 'Start game'
+				game_stat: 'Start game',
+        opponent_name: 'Computer',
+        scoreboard: {
+          you: 0,
+          opponent: 0
+        }
 			}
 		else {
 			this.sock_start()
@@ -40,7 +47,12 @@ export default class SetName extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: false,
-				game_stat: 'Connecting'
+				game_stat: 'Connecting',
+        opponent_name: 'Unknown',
+        scoreboard: {
+          you: 0,
+          opponent: 0
+        }
 			}
 		}
 	}
@@ -72,7 +84,8 @@ export default class SetName extends Component {
 			this.setState({
 				next_turn_ply: data.mode=='m',
 				game_play: true,
-				game_stat: 'Playing with ' + data.opp.name
+				game_stat: 'Playing with ' + data.opp.name,
+        opponent_name: data.opp.name
 			})
 
 		}.bind(this));
@@ -139,9 +152,26 @@ export default class SetName extends Component {
 						</tr>
 					</tbody>
 					</table>
+          <Score
+            opponent_name={this.state.opponent_name}
+            scoreboard={this.state.scoreboard}
+          />
 				</div>
 
-				<button type='submit' onClick={this.end_game.bind(this)} className='button'><span>End Game <span className='fa fa-caret-right'></span></span></button>
+        <ul className="flexrowstart" style={{ width: '390px' }}>
+          <li className="flexitemauto centre-left">
+            <button type='submit' onClick={this.end_game.bind(this)} className='button'>
+              <span>End Game <span className='fa fa-caret-right'></span></span>
+            </button>
+          </li>
+          <li className="flexitemauto centre-right">
+            {!this.state.game_play &&
+            <button type='button' onClick={this.play_again.bind(this)} className='button'>
+              <span>Play Again <span className='fa fa-caret-right'></span></span>
+            </button>
+            }
+          </li>
+        </ul>
 
 			</div>
 		)
@@ -304,12 +334,20 @@ export default class SetName extends Component {
 			TweenMax.killAll(true)
 			TweenMax.from('td.win', 1, {opacity: 0, ease: Linear.easeIn})
 
+
 			this.setState({
 				game_stat: (cell_vals[set[0]]=='x'?'You':'Opponent')+' win',
-				game_play: false
+				game_play: false,
+        scoreboard: {
+          you: (cell_vals[set[0]] === 'x')
+            ? this.state.scoreboard.you + 1
+            : this.state.scoreboard.you,
+          opponent: (cell_vals[set[0]] === 'x')
+            ? this.state.scoreboard.opponent
+            : this.state.scoreboard.opponent + 1
+        }
 			})
 
-			this.socket && this.socket.disconnect();
 
 		} else if (fin) {
 		
@@ -318,7 +356,6 @@ export default class SetName extends Component {
 				game_play: false
 			})
 
-			this.socket && this.socket.disconnect();
 
 		} else {
 			this.props.game_type!='live' && this.state.next_turn_ply && setTimeout(this.turn_comp.bind(this), rand_to_fro(500, 1000));
@@ -336,6 +373,20 @@ export default class SetName extends Component {
 		this.socket && this.socket.disconnect();
 
 		this.props.onEndGame()
+	}
+
+  
+  play_again () {
+    for (let i=1; i<=9; i++) 
+     this.refs['c' + i].classList.remove('win')
+
+    this.state.cell_vals = {}
+    this.state.game_play = true
+
+    if (this.props.game_type!='live')
+			this.state.next_turn_ply = true
+
+		this.props.onPlayAgain()
 	}
 
 
