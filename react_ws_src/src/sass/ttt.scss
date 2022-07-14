@@ -70,7 +70,7 @@ section#TTT_game{
 					height: 100px;
 					line-height:1.5em;
 					padding-top:10px;
-			}				
+			}
 			::-webkit-input-placeholder { /* WebKit, Blink, Edge */
 			    color:    $colorSecondary;
 			}
@@ -87,14 +87,14 @@ section#TTT_game{
 			}
 			:placeholder-shown { /* Standard (https://drafts.csswg.org/selectors-4/#placeholder) */
 			  color:    $colorSecondary;
-			}							
+			}
 		}
 
 		&.select_option.error select{
 		  border: 1px solid $colorSecondary;
 		  //box-shadow:0px 4px 0px 0px $colorSecondary;
 		  color: $colorSecondary;
-		}			
+		}
 	}
 
 	.button {
@@ -105,7 +105,7 @@ section#TTT_game{
 
 		&.long {
 			width: 300px;
-		}	
+		}
 	}
 
 	#game_stat {
@@ -144,12 +144,26 @@ section#TTT_game{
 			text-align: center;
 
 			&:hover{
-				background: #ff0;
+				background: lightgrey;
 			}
 
 			&.win {
-				background: #f00;
+				background: gold
 			}
+		}
+
+		i.fa-star-o, i.fa-times {
+			color: mediumpurple;
+			animation: sky-drop 2s linear 1 forwards;
+			transform-origin: 50% 100%;
+		}
+		@keyframes sky-drop {
+			 0% { transform: scale(.5, .5) translateY(-700%); opacity: 0; }
+			60% { transform: scale(.8, 1.2) translateY(0) rotate(+14deg); opacity: 1 }
+			73% { transform: scale(1.15, .85) translateY(+10%) rotate(+5deg); }
+			78% { transform: scale(1.1, .9) translateY(-17%) translateX(3%) rotate(-5deg); }
+			88% { transform: scale(1, 1) translateY(0) rotate(0); }
+			100% { }
 		}
 
 		.vbrd {

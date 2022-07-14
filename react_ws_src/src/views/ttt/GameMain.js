@@ -6,6 +6,7 @@ import TweenMax from 'gsap'
 
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
+import find_best_move from '../../helpers/ttt_solver';
 
 export default class SetName extends Component {
 
@@ -59,14 +60,14 @@ export default class SetName extends Component {
 
 		this.socket = io(app.settings.ws_conf.loc.SOCKET__io.u);
 
-		this.socket.on('connect', function(data) { 
+		this.socket.on('connect', function(data) {
 			// console.log('socket connected', data)
 
 			this.socket.emit('new player', { name: app.settings.curr_user.name });
 
 		}.bind(this));
 
-		this.socket.on('pair_players', function(data) { 
+		this.socket.on('pair_players', function(data) {
 			// console.log('paired with ', data)
 
 			this.setState({
@@ -99,7 +100,7 @@ export default class SetName extends Component {
 
 		return (<div>
 		        	{cell_vals && cell_vals[c]=='x' && <i className="fa fa-times fa-5x"></i>}
-					{cell_vals && cell_vals[c]=='o' && <i className="fa fa-circle-o fa-5x"></i>}
+							{cell_vals && cell_vals[c]=='o' && <i className="fa fa-star-o fa-5x"></i>}
 				</div>)
 	}
 
@@ -174,7 +175,7 @@ export default class SetName extends Component {
 
 		cell_vals[cell_id] = 'x'
 
-		TweenMax.from(this.refs[cell_id], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
+		//TweenMax.from(this.refs[cell_id], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
 
 		// this.setState({
@@ -197,14 +198,34 @@ export default class SetName extends Component {
 		let empty_cells_arr = []
 
 
-		for (let i=1; i<=9; i++) 
+		for (let i=1; i<=9; i++)
 			!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
 		// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
 
 		const c = rand_arr_elem(empty_cells_arr)
-		cell_vals[c] = 'o'
+		//cell_vals[c] = 'o'
 
-		TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
+		// Rather than the computer picking a random empty cell, let's give it a
+		// brain to calculate the best move!
+
+		// First convert cell_vals to a 3x3 board matrix as required by function
+		// find_best_move(). Empty cells are indicated by '_'
+		const board = [...Array(3)].map(_ => Array(3).fill('_'))
+		for (let i = 1; i <= 9; i++) {
+			if (cell_vals['c' + i]) {
+				let r = Math.floor((i - 1) / 3);
+				let c = (i - 1) % 3;
+				board[r][c] = cell_vals['c' + i]; // 'o' or 'x'
+			}
+		}
+
+		const bestMove = find_best_move(board);
+
+		// Convert row,col back to cell_val and return
+		const i = bestMove.row * 3 + (bestMove.col + 1);
+		cell_vals['c' + i] = 'o'
+
+		//TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
 
 		// this.setState({
@@ -227,7 +248,7 @@ export default class SetName extends Component {
 
 		cell_vals[cell_id] = 'x'
 
-		TweenMax.from(this.refs[cell_id], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
+		//TweenMax.from(this.refs[cell_id], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
 		this.socket.emit('ply_turn', { cell_id: cell_id });
 
@@ -254,7 +275,7 @@ export default class SetName extends Component {
 		const c = data.cell_id
 		cell_vals[c] = 'o'
 
-		TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
+		//TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
 
 		// this.setState({
@@ -290,13 +311,13 @@ export default class SetName extends Component {
 		}
 
 
-		for (let i=1; i<=9; i++) 
+		for (let i=1; i<=9; i++)
 			!cell_vals['c'+i] && (fin = false)
 
 		// win && console.log('win set: ', set)
 
 		if (win) {
-		
+
 			this.refs[set[0]].classList.add('win')
 			this.refs[set[1]].classList.add('win')
 			this.refs[set[2]].classList.add('win')
@@ -305,14 +326,14 @@ export default class SetName extends Component {
 			TweenMax.from('td.win', 1, {opacity: 0, ease: Linear.easeIn})
 
 			this.setState({
-				game_stat: (cell_vals[set[0]]=='x'?'You':'Opponent')+' win',
+				game_stat: (cell_vals[set[0]]==='x' ? 'You win' : 'Opponent wins'),
 				game_play: false
 			})
 
 			this.socket && this.socket.disconnect();
 
 		} else if (fin) {
-		
+
 			this.setState({
 				game_stat: 'Draw',
 				game_play: false
@@ -321,13 +342,16 @@ export default class SetName extends Component {
 			this.socket && this.socket.disconnect();
 
 		} else {
-			this.props.game_type!='live' && this.state.next_turn_ply && setTimeout(this.turn_comp.bind(this), rand_to_fro(500, 1000));
+			// If playing against the computer, randomly wait between 2 and 4 secs
+			// before making the move (to suggest the computer is "thinking").
+			// Note: the original code has a bug in that the args to rand_to_fro are reversed.
+			this.props.game_type!='live' && this.state.next_turn_ply && setTimeout(this.turn_comp.bind(this), rand_to_fro(4000, 2000));
 
 			this.setState({
 				next_turn_ply: !this.state.next_turn_ply
 			})
 		}
-		
+
 	}
 
 //	------------------------	------------------------	------------------------
