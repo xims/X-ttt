@@ -6,6 +6,7 @@ import TweenMax from 'gsap'
 
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
+import { minimax } from '../../helpers/minimax'
 
 export default class SetName extends Component {
 
@@ -196,16 +197,17 @@ export default class SetName extends Component {
 		let { cell_vals } = this.state
 		let empty_cells_arr = []
 
-
 		for (let i=1; i<=9; i++) 
 			!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
-		// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
 
-		const c = rand_arr_elem(empty_cells_arr)
-		cell_vals[c] = 'o'
+        // Determine the best move for the computer using minimax
+		const {cell} = minimax( Object.assign({}, cell_vals) , empty_cells_arr, 'o')
+		cell_vals[cell] = 'o'
 
-		TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
+        // Pick a random cell to play for the computer
+		// const cell = rand_arr_elem(empty_cells_arr)
 
+		TweenMax.from(this.refs[cell], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
 		// this.setState({
 		// 	cell_vals: cell_vals,
