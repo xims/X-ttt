@@ -98,7 +98,7 @@ export default class Ttt extends Component {
 
 	set_game_step () {
 
-		if (!app.settings.curr_user || !app.settings.curr_user.name)
+		if ( typeof this.state === 'undefined' || !app.settings.curr_user || !app.settings.curr_user.name)
 			return 'set_name'
 		else if (!this.state.game_type)
 			return 'set_game_type'
