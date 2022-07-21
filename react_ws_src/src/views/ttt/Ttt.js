@@ -42,7 +42,8 @@ export default class Ttt extends Component {
 													/>}
 					{game_step == 'start_game' && <GameMain 
 														game_type={this.state.game_type}
-														onEndGame={this.gameEnd.bind(this)} 
+														onEndGame={this.gameEnd.bind(this)}
+                                                        onRematch={this.gameRematch.bind(this)}
 													/>}
 
 				</div>
@@ -74,6 +75,14 @@ export default class Ttt extends Component {
 
 		this.upd_game_step()
 	}
+
+//	------------------------	------------------------	------------------------
+
+    gameRematch ( ) {
+        this.setState({
+            game_step: 'start_game'
+        })
+    }
 
 //	------------------------	------------------------	------------------------
 //	------------------------	------------------------	------------------------

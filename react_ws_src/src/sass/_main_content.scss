@@ -62,6 +62,15 @@
 	}
 }
 
+#GameMain {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	button+button {
+        margin-left: 30px;
+	}
+}
 
 
 	#input_basket_total {

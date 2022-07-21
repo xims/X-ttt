@@ -2,7 +2,7 @@ const PLAYER1 = 'x'
 const PLAYER2 = 'o'
 
 // An array containing all winning combinations
-const WIN_CONDITIONS = [
+export const WIN_CONDITIONS = [
   [1, 2, 3],
   [4, 5, 6],
   [7, 8, 9],
@@ -33,6 +33,7 @@ function checkWin(board, player) {
 // Takes the board state and the current player and determines the best possbile move in order to win.
 export function minimax(board, freeCells, player) {
   const otherPlayer = player === PLAYER1 ? PLAYER2 : PLAYER1
+
 
   // Check for a terminal game condition (win/loss/draw)
   if (checkWin(board, PLAYER1)) { return { score: -10 } }
