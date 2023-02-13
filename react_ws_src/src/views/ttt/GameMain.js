@@ -6,6 +6,7 @@ import TweenMax from 'gsap'
 
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
+import Button from '../../components/Button'
 
 export default class SetName extends Component {
 
@@ -141,7 +142,7 @@ export default class SetName extends Component {
 					</table>
 				</div>
 
-				<button type='submit' onClick={this.end_game.bind(this)} className='button'><span>End Game <span className='fa fa-caret-right'></span></span></button>
+				<Button onClick={this.end_game.bind(this)}>End Game</Button>
 
 			</div>
 		)

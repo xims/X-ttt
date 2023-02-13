@@ -5,6 +5,7 @@ import PopUp from '../layouts/PopUp'
 import validator from 'validator'
 import objectAssign from 'object-assign'
 import serialize_params from '../../helpers/serialize_params'
+import Button from '../../components/Button'
 
 export default class Contact extends Component {
 
@@ -66,7 +67,7 @@ export default class Contact extends Component {
 					<textarea ref='message' className='input textarea' onBlur={this.checkOnBlurr.bind(this)}></textarea>
 				</FieldHolder>
 
-				<button type='submit' onClick={this.sendMessage.bind(this)} className='button'><span>SEND <span className='fa fa-caret-right'></span></span></button>
+				<Button uppercase onClick={this.sendMessage.bind(this)}>Send</Button>
 				<p className='disclaimer'>Any personal information collected in this contact form is so that we can send you the information you have requested. It will not be used for any other reason.</p>
 			</form>
 		)

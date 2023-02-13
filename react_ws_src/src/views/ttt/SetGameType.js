@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 
+import Button from '../../components/Button'
+
 export default class SetGameType extends Component {
 
 	constructor (props) {
@@ -16,11 +18,11 @@ export default class SetGameType extends Component {
 
 				<h1>Choose game type</h1>
 
-				<button type='submit' onClick={this.selTypeLive.bind(this)} className='button long'><span>Live against another player <span className='fa fa-caret-right'></span></span></button>
+				<Button long onClick={this.selTypeLive.bind(this)}>Live against another player</Button>
 				
 				&nbsp;&nbsp;&nbsp;&nbsp;
 
-				<button type='submit' onClick={this.selTypeComp.bind(this)} className='button long'><span>Against a computer <span className='fa fa-caret-right'></span></span></button>
+				<Button long onClick={this.selTypeComp.bind(this)}>Against a computer</Button>
 
 			</div>
 		)

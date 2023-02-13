@@ -12,6 +12,7 @@
 
 ////////////////////////////////////////////////////////////////////// SITEWIDE STYLES
 @import '_mixins.scss'; // MIXINS
+@import '_utilities.scss'; // UTILITIES
 @import '_layout.scss'; // LAYOUT SPECIFIC
 html,body {
 	font-family: $bodyFont;

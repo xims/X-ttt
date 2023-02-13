@@ -2,6 +2,7 @@ import React, { Component} from 'react'
 import { Link } from 'react-router'
 
 import X2JS from 'x2js'
+import Button from '../../components/Button'
 
 export default class Txt_page extends Component {
 
@@ -35,9 +36,7 @@ export default class Txt_page extends Component {
 							console.log(b)
 							return (
 									<Link to={b.u} key={i} >
-										<button type='submit' className='button'>
-											<span>{b.txt} <span className='fa fa-caret-right'></span></span>
-										</button>
+										<Button>{b.txt}</Button>
 									</Link>
 							)
 						})

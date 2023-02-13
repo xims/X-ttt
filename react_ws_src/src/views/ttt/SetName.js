@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 
+import Button from '../../components/Button'
+
 export default class SetName extends Component {
 
 	constructor (props) {
@@ -22,7 +24,7 @@ export default class SetName extends Component {
 				</div>
 
 
-				<button type='submit' onClick={this.saveName.bind(this)} className='button'><span>SAVE <span className='fa fa-caret-right'></span></span></button>
+				<Button uppercase onClick={this.saveName.bind(this)}>Save</Button>
 
 			</div>
 		)
