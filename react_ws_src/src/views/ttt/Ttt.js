@@ -91,7 +91,7 @@ export default class Ttt extends Component {
 
 		if (!app.settings.curr_user || !app.settings.curr_user.name)
 			return 'set_name'
-		else if (!this.state.game_type)
+		else if (!this.state || !this.state.game_type)
 			return 'set_game_type'
 		else
 			return 'start_game'
