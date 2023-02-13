@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import app from 'ampersand-app'
 import { render } from 'react-dom'
 import { Router, Route, Redirect, IndexRoute, browserHistory  } from 'react-router'
@@ -21,26 +21,45 @@ import prep_env from './models/prep_env'
 
 
 
+class App extends Component {
+
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			game_step: 'set_name'
+		}
+	}
+
+	setGlobalState(nextState) {
+		this.setState(nextState)
+	}
+
+	render() {
+		return (
+			<Router history={browserHistory}>
+				<Route path='/' component={Main}>
+
+					<IndexRoute components={{mainContent: Txt_page}} />
+
+					<Route path='/pg/(:page)' components={{mainContent: Txt_page}} />
+
+					<Route path='/ttt' components={{mainContent: (props) => <Ttt {...props} globalState={this.state} setGlobalState={this.setGlobalState.bind(this)} />}} />
+
+					<Route path='/pupg/(:pu_page)' components={{popup: PopUp_page}} />
+
+					<Route path='/contact-us' components={{popup: Contact}} />
+
+					<Route path='/error/404' components={{mainContent: ErrorPage}} />
+					<Route path="*" components={{mainContent: ErrorPage}} />
+				</Route>
+			</Router>
+		)
+	}
+}
+
 let renderSite = function () {
-	return render((
-		<Router history={browserHistory}>
-			<Route path='/' component={Main}>
-
-				<IndexRoute components={{mainContent: Txt_page}} />
-
-				<Route path='/pg/(:page)' components={{mainContent: Txt_page}} />
-
-				<Route path='/ttt' components={{mainContent: Ttt}} />
-
-				<Route path='/pupg/(:pu_page)' components={{popup: PopUp_page}} />
-
-				<Route path='/contact-us' components={{popup: Contact}} />
-
-				<Route path='/error/404' components={{mainContent: ErrorPage}} />
-				<Route path="*" components={{mainContent: ErrorPage}} />
-			</Route>
-		</Router>
-	), document.getElementById('root'))
+	return render(<App />, document.getElementById('root'))
 }
 
 // ----------------------------------------------------------------------

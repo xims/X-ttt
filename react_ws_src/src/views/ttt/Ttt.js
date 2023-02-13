@@ -10,17 +10,13 @@ export default class Ttt extends Component {
 
 	constructor (props) {
 		super(props)
-
-		this.state = {
-			game_step: this.set_game_step()
-		}
 	}
 
 //	------------------------	------------------------	------------------------
 
 	render () {
 
-		const {game_step} = this.state
+		const {game_step} = this.props.globalState
 
 		console.log(game_step)
 
@@ -41,7 +37,7 @@ export default class Ttt extends Component {
 														onSetType={this.saveGameType.bind(this)} 
 													/>}
 					{game_step == 'start_game' && <GameMain 
-														game_type={this.state.game_type}
+														game_type={this.props.globalState.game_type}
 														onEndGame={this.gameEnd.bind(this)} 
 													/>}
 
@@ -52,49 +48,22 @@ export default class Ttt extends Component {
 
 //	------------------------	------------------------	------------------------
 
-	saveUserName (n) {
-		app.settings.curr_user = {}
-		app.settings.curr_user.name = n
+	saveUserName (name) {
+		app.settings.curr_user = { name }
 
-		this.upd_game_step()
+		this.props.setGlobalState({ game_step: 'set_game_type' })
 	}
 
 //	------------------------	------------------------	------------------------
 
-	saveGameType (t) {
-		this.state.game_type = t
-
-		this.upd_game_step()
+	saveGameType (type) {
+		this.props.setGlobalState({ game_step: 'start_game', game_type: type })
 	}
 
 //	------------------------	------------------------	------------------------
 
 	gameEnd (t) {
-		this.state.game_type = null
-
-		this.upd_game_step()
-	}
-
-//	------------------------	------------------------	------------------------
-//	------------------------	------------------------	------------------------
-
-	upd_game_step () {
-
-		this.setState({
-			game_step: this.set_game_step()
-		})
-	}
-
-//	------------------------	------------------------	------------------------
-
-	set_game_step () {
-
-		if (!app.settings.curr_user || !app.settings.curr_user.name)
-			return 'set_name'
-		else if (!this.state || !this.state.game_type)
-			return 'set_game_type'
-		else
-			return 'start_game'
+		this.props.setGlobalState({ game_step: 'set_name', game_type: null })
 	}
 
 }
