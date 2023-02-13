@@ -104,15 +104,14 @@ header#main_header {
 						font-weight: 400;
 						text-transform: uppercase;
 						@include font-size(14px);
-						padding-top: 26px;
 						display: block;
 						background-position: top center;
 						background-repeat:no-repeat;
 						color: #0038A8;
+						text-align: center;
 
 						i {
 							font-family: "FontAwesome";
-							position: absolute;
 							display: block;
 							top: -5px;
 							margin: 10 auto;
