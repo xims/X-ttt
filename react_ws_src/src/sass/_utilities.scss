@@ -1,3 +1,7 @@
+.space-x-3 > * + * {
+    margin-left: 1rem;
+}
+
 .uppercase {
     text-transform: uppercase;
 }
