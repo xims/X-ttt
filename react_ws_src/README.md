@@ -12,18 +12,19 @@ Major libraries used:
 
 ---
 
-##For demonstration purposes only.
+**For demonstration purposes only.**
 
 ---
----
 
-### Getting Started
+## Getting Started
 
 Install all the packages
 
 ~~~bash
-npm install
+npm install --force
 ~~~
+
+The `--force` option is needed to override the peer dependency requirements of `sass-loader`.
 
 To start the development web server use the following command and turn your browser to [http://localhost:3000](http://localhost:3000) or [http://0.0.0.0:3000](http://0.0.0.0:3000) 
 

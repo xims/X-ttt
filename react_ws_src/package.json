@@ -9,6 +9,9 @@
     "type": "git",
     "url": "https://github.com/xims/X-TTT/react_ws_src"
   },
+  "engines": {
+    "node": "16"
+  },
   "scripts": {
     "start": "node devServer.js",
     "lint": "eslint src",
