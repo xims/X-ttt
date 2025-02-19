@@ -1,0 +1,19 @@
+#game_board td {
+    border: 1px solid black;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#game_board td.vbrd {
+    border-right: 2px solid black;
+}
+
+#game_board td.hbrd {
+    border-bottom: 2px solid black;
+}
+
+#game_board td.win {
+    background-color: yellow;
+}

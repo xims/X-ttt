@@ -13,16 +13,18 @@ export default class SetName extends Component {
 		super(props)
 
 		this.win_sets = [
-			['c1', 'c2', 'c3'],
-			['c4', 'c5', 'c6'],
-			['c7', 'c8', 'c9'],
+			['c1', 'c2', 'c3', 'c4'],
+            ['c5', 'c6', 'c7', 'c8'],
+            ['c9', 'c10', 'c11', 'c12'],
+            ['c13', 'c14', 'c15', 'c16'],
 
-			['c1', 'c4', 'c7'],
-			['c2', 'c5', 'c8'],
-			['c3', 'c6', 'c9'],
+            ['c1', 'c5', 'c9', 'c13'],
+            ['c2', 'c6', 'c10', 'c14'],
+            ['c3', 'c7', 'c11', 'c15'],
+            ['c4', 'c8', 'c12', 'c16'],
 
-			['c1', 'c5', 'c9'],
-			['c3', 'c5', 'c7']
+            ['c1', 'c6', 'c11', 'c16'],
+            ['c4', 'c7', 'c10', 'c13']
 		]
 
 
@@ -125,18 +127,27 @@ export default class SetName extends Component {
 						<tr>
 							<td id='game_board-c1' ref='c1' onClick={this.click_cell.bind(this)}> {this.cell_cont('c1')} </td>
 							<td id='game_board-c2' ref='c2' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c2')} </td>
-							<td id='game_board-c3' ref='c3' onClick={this.click_cell.bind(this)}> {this.cell_cont('c3')} </td>
+							<td id='game_board-c3' ref='c3' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c3')} </td>
+							<td id='game_board-c4' ref='c4' onClick={this.click_cell.bind(this)}> {this.cell_cont('c4')} </td>
 						</tr>
 						<tr>
-							<td id='game_board-c4' ref='c4' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c4')} </td>
-							<td id='game_board-c5' ref='c5' onClick={this.click_cell.bind(this)} className="vbrd hbrd"> {this.cell_cont('c5')} </td>
-							<td id='game_board-c6' ref='c6' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c6')} </td>
+							<td id='game_board-c5' ref='c5' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c5')} </td>
+							<td id='game_board-c6' ref='c6' onClick={this.click_cell.bind(this)} className="vbrd hbrd"> {this.cell_cont('c6')} </td>
+							<td id='game_board-c7' ref='c7' onClick={this.click_cell.bind(this)} className="vbrd hbrd"> {this.cell_cont('c7')} </td>
+							<td id='game_board-c8' ref='c8' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c8')} </td>
 						</tr>
 						<tr>
-							<td id='game_board-c7' ref='c7' onClick={this.click_cell.bind(this)}> {this.cell_cont('c7')} </td>
-							<td id='game_board-c8' ref='c8' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c8')} </td>
-							<td id='game_board-c9' ref='c9' onClick={this.click_cell.bind(this)}> {this.cell_cont('c9')} </td>
+							<td id='game_board-c9' ref='c9' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c9')} </td>
+							<td id='game_board-c10' ref='c10' onClick={this.click_cell.bind(this)} className="vbrd hbrd"> {this.cell_cont('c10')} </td>
+							<td id='game_board-c11' ref='c11' onClick={this.click_cell.bind(this)} className="vbrd hbrd"> {this.cell_cont('c11')} </td>
+							<td id='game_board-c12' ref='c12' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c12')} </td>
 						</tr>
+						<tr>
+                            <td id='game_board-c13' ref='c13' onClick={this.click_cell.bind(this)}> {this.cell_cont('c13')} </td>
+                            <td id='game_board-c14' ref='c14' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c14')} </td>
+                            <td id='game_board-c15' ref='c15' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c15')} </td>
+                            <td id='game_board-c16' ref='c16' onClick={this.click_cell.bind(this)}> {this.cell_cont('c16')} </td>
+                        </tr>
 					</tbody>
 					</table>
 				</div>
@@ -197,7 +208,7 @@ export default class SetName extends Component {
 		let empty_cells_arr = []
 
 
-		for (let i=1; i<=9; i++) 
+		for (let i=1; i<=16; i++) 
 			!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
 		// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
 
@@ -285,12 +296,12 @@ export default class SetName extends Component {
 
 		for (let i=0; !win && i<this.win_sets.length; i++) {
 			set = this.win_sets[i]
-			if (cell_vals[set[0]] && cell_vals[set[0]]==cell_vals[set[1]] && cell_vals[set[0]]==cell_vals[set[2]])
+			if (cell_vals[set[0]] && cell_vals[set[0]]==cell_vals[set[1]] && cell_vals[set[0]]==cell_vals[set[2]] && cell_vals[set[0]]==cell_vals[set[3]])
 				win = true
 		}
 
 
-		for (let i=1; i<=9; i++) 
+		for (let i=1; i<=16; i++) 
 			!cell_vals['c'+i] && (fin = false)
 
 		// win && console.log('win set: ', set)
@@ -300,6 +311,7 @@ export default class SetName extends Component {
 			this.refs[set[0]].classList.add('win')
 			this.refs[set[1]].classList.add('win')
 			this.refs[set[2]].classList.add('win')
+			this.refs[set[3]].classList.add('win')
 
 			TweenMax.killAll(true)
 			TweenMax.from('td.win', 1, {opacity: 0, ease: Linear.easeIn})
