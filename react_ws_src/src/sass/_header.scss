@@ -1,3 +1,7 @@
+// Import variables and mixins
+@import '_variables.scss';
+@import '_mixins.scss';
+
 .elem_hide { 
 	visibility: hidden;
 	width__: 1px;

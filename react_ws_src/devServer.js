@@ -1,35 +1,59 @@
-var path = require('path');
-var express = require('express');
-var webpack = require('webpack');
-var config = require('./webpack.config.dev');
+const path = require("path");
+const express = require("express");
+const webpack = require("webpack");
+const webpackDevMiddleware = require("webpack-dev-middleware");
+const webpackHotMiddleware = require("webpack-hot-middleware");
+const proxy = require("express-http-proxy");
+const config = require("./webpack.config.dev");
 
-var app = express();
-var compiler = webpack(config);
+const app = express();
+const compiler = webpack(config);
+const PORT = 3001;
 
-app.use(require('webpack-dev-middleware')(compiler, {
-	noInfo: true,
-	publicPath: config.output.publicPath
-}));
+// Webpack middleware
+app.use(
+  webpackDevMiddleware(compiler, {
+    publicPath: config.output.publicPath,
+  })
+);
 
-app.use(require('webpack-hot-middleware')(compiler));
+app.use(webpackHotMiddleware(compiler));
 
-// app.use(express.static(paths.client('images')))
-// app.use(express.static('static'))
+// Static files middleware
+app.use("/static", express.static(path.join(__dirname, "static")));
 
-var proxy = require('proxy-middleware');
-var url = require('url');
-// app.use('/images', proxy(url.parse('../WS/images')));
-// app.use('/img', proxy(url.parse('../WS/img')));
-app.use('/images', proxy(url.parse('http://z2/projs/kisla/X-react-starter/dev/WS/images')));
-
-app.get('*', function(req, res) {
-	res.sendFile(path.join(__dirname, 'static', 'index.html'));
+// Also serve style.css and bundle.js from the root
+app.use("/static/style.css", (req, res) => {
+  res.setHeader("Content-Type", "text/css");
+  res.sendFile(path.join(__dirname, "static", "style.css"));
 });
 
-app.listen(3000, '0.0.0.0', function(err) {
-	if (err) {
-		console.log(err);
-		return;
-	}
-	console.log('Listening at http://0.0.0.0:3000');
+app.use("/static/bundle.js", (req, res, next) => {
+  res.setHeader("Content-Type", "application/javascript");
+  // Let webpack middleware handle this if it exists
+  if (res.headersSent) return next();
+  next();
+});
+
+// Proxy middleware for images
+app.use(
+  "/images",
+  proxy("http://z2/projs/kisla/X-react-starter/dev/WS", {
+    proxyReqPathResolver: function (req) {
+      return "/images" + req.url;
+    },
+  })
+);
+
+// Serve index.html for all other routes (SPA support)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+app.listen(PORT, "localhost", (err) => {
+  if (err) {
+    console.log(err);
+    return;
+  }
+  console.log(`Listening at http://localhost:${PORT}`);
 });

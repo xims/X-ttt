@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"express": "^4.14.0",
-		"socket.io": "^1.4.8"
+		"socket.io": "^4.7.2",
+		"socket.io-adapter-cluster": "^1.0.1"
 	}
 }

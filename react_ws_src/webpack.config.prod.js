@@ -1,54 +1,82 @@
-var path = require('path')
-var webpack = require('webpack')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
+const path = require("path");
+const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-	devtool: 'source-map',
-	entry: [
-		'../src/app'
-	],
-	context: path.join(__dirname, 'static'),
-	output: {
-		path: path.join(__dirname, 'dist'),
-		filename: 'bundle.js',
-		publicPath: './'
-	},
-	plugins: [
-		new ExtractTextPlugin('style.css'),
-		new webpack.optimize.OccurenceOrderPlugin(),
-		new webpack.DefinePlugin({
-			'process.env': {
-				'NODE_ENV': JSON.stringify('production')
-			}
-		}),
-		new webpack.optimize.UglifyJsPlugin({
-			compressor: {
-				warnings: false
-			}
-		})
-	],
-	module: {
-		loaders: [
-			{
-				test: /\.(ico|gif|png|html|jpg|swf|xml|svg)$/,
-				loader: 'file?name=[path][name].[ext]'
-			},
-			{
-				test: /\.scss$/,
-				loader: ExtractTextPlugin.extract(
-					'style',
-					'css!sass'
-				)
-			},
-			{
-				test: /\.jsx?/,
-				loaders: ['babel'],
-				include: path.join(__dirname, 'src')
-			},
-			{
-				test: /(flickity|fizzy-ui-utils|get-size|unipointer|imagesloaded)/,
-				loader: 'imports?define=>false&this=>window'
-			},
-		]
-	},
-}
+  mode: "production",
+  entry: "./src/index",
+  output: {
+    path: path.join(__dirname, "dist"),
+    filename: "bundle.js",
+    chunkFilename: "[id].chunk.js",
+    publicPath: "/",
+  },
+  resolve: {
+    extensions: [".js", ".jsx"],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+      {
+        test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            maxSize: 8192,
+          },
+        },
+      },
+      {
+        test: /\.xml$/,
+        use: "xml-loader",
+      },
+    ],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "style.css",
+    }),
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify("production"),
+    }),
+  ],
+  optimization: {
+    minimize: true,
+    splitChunks: {
+      chunks: "async",
+      minSize: 30000,
+      maxSize: 240000,
+      minChunks: 1,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
+      automaticNameDelimiter: "~",
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+          name: "vendors",
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+  },
+};

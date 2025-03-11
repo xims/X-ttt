@@ -1,110 +1,111 @@
-import React, { Component} from 'react'
-import { Link } from 'react-router'
+import React, { Component } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-import SetName from './SetName'
-import SetGameType from './SetGameType'
+import SetName from "./SetName";
+import SetGameType from "./SetGameType";
+import GameMain from "./GameMain";
 
-import GameMain from './GameMain'
+// Create a wrapper component that uses hooks
+function TttWithNavigation(props) {
+  const navigate = useNavigate();
 
-export default class Ttt extends Component {
+  // This function handles navigation to the homepage
+  const handleEndGame = () => {
+    navigate("/");
+  };
 
-	constructor (props) {
-		super(props)
-
-		this.state = {
-			game_step: this.set_game_step()
-		}
-	}
-
-//	------------------------	------------------------	------------------------
-
-	render () {
-
-		const {game_step} = this.state
-
-		console.log(game_step)
-
-		return (
-			<section id='TTT_game'>
-				<div id='page-container'>
-					{game_step == 'set_name' && <SetName 
-														onSetName={this.saveUserName.bind(this)} 
-												/>}
-
-					{game_step != 'set_name' && 
-						<div>
-							<h2>Welcome, {app.settings.curr_user.name}</h2>
-						</div>
-					}
-
-					{game_step == 'set_game_type' && <SetGameType 
-														onSetType={this.saveGameType.bind(this)} 
-													/>}
-					{game_step == 'start_game' && <GameMain 
-														game_type={this.state.game_type}
-														onEndGame={this.gameEnd.bind(this)} 
-													/>}
-
-				</div>
-			</section>
-		)
-	}
-
-//	------------------------	------------------------	------------------------
-
-	saveUserName (n) {
-		app.settings.curr_user = {}
-		app.settings.curr_user.name = n
-
-		this.upd_game_step()
-	}
-
-//	------------------------	------------------------	------------------------
-
-	saveGameType (t) {
-		this.state.game_type = t
-
-		this.upd_game_step()
-	}
-
-//	------------------------	------------------------	------------------------
-
-	gameEnd (t) {
-		this.state.game_type = null
-
-		this.upd_game_step()
-	}
-
-//	------------------------	------------------------	------------------------
-//	------------------------	------------------------	------------------------
-
-	upd_game_step () {
-
-		this.setState({
-			game_step: this.set_game_step()
-		})
-	}
-
-//	------------------------	------------------------	------------------------
-
-	set_game_step () {
-
-		if (!app.settings.curr_user || !app.settings.curr_user.name)
-			return 'set_name'
-		else if (!this.state.game_type)
-			return 'set_game_type'
-		else
-			return 'start_game'
-	}
-
+  return <TttClass {...props} navigateToHome={handleEndGame} />;
 }
 
-//	------------------------	------------------------	------------------------
+// Rename the class component
+class TttClass extends Component {
+  constructor(props) {
+    super(props);
 
-Ttt.propTypes = {
-	params: React.PropTypes.any
+    this.state = {
+      game_step: this.set_game_step(),
+      game_type: null,
+    };
+  }
+
+  render() {
+    const { game_step, game_type } = this.state;
+
+    return (
+      <section id="TTT_game">
+        <div id="page-container">
+          {game_step === "set_name" && (
+            <SetName onSetName={this.saveUserName.bind(this)} />
+          )}
+
+          {game_step !== "set_name" && (
+            <div>
+              <h2>Welcome, {window.app.settings.curr_user.name}</h2>
+            </div>
+          )}
+
+          {game_step === "set_game_type" && (
+            <SetGameType onSetType={this.saveGameType.bind(this)} />
+          )}
+
+          {game_step === "start_game" && (
+            <GameMain
+              game_type={game_type}
+              onEndGame={this.gameEnd.bind(this)}
+            />
+          )}
+        </div>
+      </section>
+    );
+  }
+
+  saveUserName(n) {
+    window.app.settings.curr_user = {};
+    window.app.settings.curr_user.name = n;
+    this.upd_game_step();
+  }
+
+  saveGameType(gameConfig) {
+    this.setState(
+      {
+        game_type: gameConfig,
+      },
+      this.upd_game_step
+    );
+  }
+
+  gameEnd() {
+    // Navigate to home when game ends
+    this.props.navigateToHome();
+
+    this.setState(
+      {
+        game_type: null,
+      },
+      this.upd_game_step
+    );
+  }
+
+  upd_game_step() {
+    this.setState({
+      game_step: this.set_game_step(),
+    });
+  }
+
+  set_game_step() {
+    if (!window.app || !window.app.settings) return "set_name";
+    if (!window.app.settings.curr_user || !window.app.settings.curr_user.name)
+      return "set_name";
+    else if (!this.state.game_type) return "set_game_type";
+    else return "start_game";
+  }
 }
 
-Ttt.contextTypes = {
-  router: React.PropTypes.object.isRequired
-}
+TttClass.propTypes = {
+  params: PropTypes.any,
+  navigateToHome: PropTypes.func.isRequired,
+};
+
+// Export the wrapper component instead
+export default TttWithNavigation;
