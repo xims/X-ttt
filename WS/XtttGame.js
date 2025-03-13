@@ -1,5 +1,3 @@
-
-
 // ----	--------------------------------------------	--------------------------------------------	
 // ----	--------------------------------------------	--------------------------------------------	
 
@@ -98,6 +96,19 @@ function onClientDisconnect() {
 // ----	--------------------------------------------	--------------------------------------------	
 // ----	--------------------------------------------	--------------------------------------------	
 
+function onChatMessage(data) {
+	if (!this.player || !this.player.opp) return
+
+	const message = {
+		text: data.text,
+		sender: this.player.opp.sockid === this.id ? 'player' : 'opponent',
+		senderName: this.player.opp.sockid === this.id ? this.player.name : this.player.opp.name,
+		timestamp: data.timestamp || new Date().toISOString()
+	}
+
+	io.to(this.player.opp.sockid).emit('chat_message', message)
+}
+
 set_game_sock_handlers = function (socket) {
 
 	// util.log("New game player has connected: "+socket.id);
@@ -106,6 +117,15 @@ set_game_sock_handlers = function (socket) {
 
 	socket.on("ply_turn", onTurn);
 
+	socket.on("chat_message", onChatMessage);
+
 	socket.on("disconnect", onClientDisconnect);
 
 };
+
+module.exports = {
+  onNewPlayer,
+  onChatMessage,
+  pair_avail_players,
+  set_game_sock_handlers
+}
