@@ -19,6 +19,11 @@ Major libraries used:
 
 ### Getting Started
 
+.nvmrc contains the new NodeJs version
+~~~bash
+nvm use
+~~~
+
 Install all the packages
 
 ~~~bash
