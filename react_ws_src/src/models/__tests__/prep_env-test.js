@@ -114,20 +114,15 @@ app.settings.ws_conf =
             },
             "privacy-policy": {
                 "pg_name": "Web Site Privacy Policy",
-                "__cdata": "\r\n\t\t\t\t<p>We are committed to providing and maintaining a safe and secure environment on the internet for everyone. The privacy of any information we collect is important to us.</p>\r\n\r\n\t\t\t\t<h4>Comments? Questions? Suggestions?</h4>\r\n\t\t\t\t<p>We welcome any suggestions on how to make this a better and safer place for everyone. If you would like to communicate with us about our Privacy Policy, please use ‘contact us’ form.</p>\r\n\t\t\t"
+                "__cdata": "\r\n\t\t\t\t<p>We are committed to providing and maintaining a safe and secure environment on the internet for everyone. The privacy of any information we collect is important to us.</p>\r\n\r\n\t\t\t\t<h4>Comments? Questions? Suggestions?</h4>\r\n\t\t\t\t<p>We welcome any suggestions on how to make this a better and safer place for everyone. If you would like to communicate with us about our Privacy Policy, please use 'contact us' form.</p>\r\n\t\t\t"
             }
         }
 }
 
-
-
 describe('prep_env', () => {
 	it('loaded from xml year', () => {
-		// const disc_model = require('../disc_model');
-
-		expect(app.settings.ws_conf.site.vals.year).toBe(2016);
+		expect(app.settings.ws_conf.site.vals.year).toBe("2016");
 	});
-
 });
 
 

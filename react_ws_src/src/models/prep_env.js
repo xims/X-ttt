@@ -1,5 +1,6 @@
 import superagent from 'superagent'
 import X2JS from 'x2js'
+import app from 'ampersand-app'
 
 import '../../static/ws_conf.xml'
 
@@ -9,6 +10,17 @@ const prep_env = function (ca) {
 
 	const call_after = ca
 
+	if (!app.settings) {
+		app.settings = {
+			ws_conf: null,
+			is_mobile: false,
+			mobile_type: null,
+			can_app: false,
+			hasFlash: false,
+			couldHaveFlash: false
+		}
+	}
+
 	load_conf()
 
 	return
@@ -16,8 +28,9 @@ const prep_env = function (ca) {
 // ---- --------------------------------------------  --------------------------------------------  
 
 	function load_conf () {
-	    // console.log("conf_file", conf_file)
-
+		// console.log("conf_file", conf_file)
+		const conf_file = '/ws_conf.xml'
+		
 		superagent
 			.get(conf_file)
 			.end(function(err, res){
