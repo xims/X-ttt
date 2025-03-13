@@ -1,27 +1,36 @@
 {
-  "ecmaFeatures": {
-    "jsx": true,
-    "modules": true
-  },
+  "parser": "@babel/eslint-parser",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "es6": true,
+    "jest": true
   },
-  "parser": "babel-eslint",
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "globals": {
+    "app": "writable",
+    "base_dir": "writable",
+    "conf_file": "writable",
+    "ActiveXObject": "writable",
+    "Power4": "writable",
+    "Linear": "writable"
+  },
   "rules": {
-    "quotes": [2, "single"],
-    "strict": [2, "never"],
-    "babel/generator-star-spacing": 1,
-    "babel/new-cap": 1,
-    "babel/object-shorthand": 1,
-    "babel/arrow-parens": 1,
-    "babel/no-await-in-loop": 1,
-    "react/jsx-uses-react": 2,
-    "react/jsx-uses-vars": 2,
-    "react/react-in-jsx-scope": 2
-  },
-  "plugins": [
-    "babel",
-    "react"
-  ]
+    "react/prop-types": "off",
+    "no-unused-vars": "warn",
+    "no-mixed-spaces-and-tabs": "warn",
+    "react/no-string-refs": "warn",
+    "react/no-deprecated": "warn",
+    "react/no-direct-mutation-state": "warn",
+    "no-empty": "warn",
+    "no-self-assign": "warn"
+  }
 }
