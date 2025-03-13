@@ -26,7 +26,7 @@
 		<SCRIPT__contact_form		u='e/s'	/>
 
 
-		<SOCKET__io		_u='http://z2:3001'	/>
+		<SOCKET__io		u='http://localhost:3001'	/>
 	</loc>
 
 <!--	========================	========================	========================	-->
@@ -148,7 +148,7 @@
 				<p>We are committed to providing and maintaining a safe and secure environment on the internet for everyone. The privacy of any information we collect is important to us.</p>
 
 				<h4>Comments? Questions? Suggestions?</h4>
-				<p>We welcome any suggestions on how to make this a better and safer place for everyone. If you would like to communicate with us about our Privacy Policy, please use ‘contact us’ form.</p>
+				<p>We welcome any suggestions on how to make this a better and safer place for everyone. If you would like to communicate with us about our Privacy Policy, please use 'contact us' form.</p>
 			]]>
 		</privacy-policy>
 	</pgs>
