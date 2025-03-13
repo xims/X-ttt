@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 
 export default class MainContent extends Component {
 
@@ -18,5 +19,5 @@ export default class MainContent extends Component {
 }
 
 MainContent.propTypes = {
-	children: React.PropTypes.any
+	children: PropTypes.any
 }

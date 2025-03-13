@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import PopUp from '../layouts/PopUp'
+import PropTypes from 'prop-types'
 
 export default class PopUp_page extends Component {
 
@@ -25,5 +26,5 @@ export default class PopUp_page extends Component {
 }
 
 PopUp_page.propTypes = {
-	params: React.PropTypes.any
+	params: PropTypes.any
 }

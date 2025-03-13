@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import superagent from 'superagent'
+import PropTypes from 'prop-types'
 
 import PopUp from '../layouts/PopUp'
 import validator from 'validator'
@@ -228,8 +229,8 @@ export class FieldHolder extends Component {
 }
 
 FieldHolder.propTypes = {
-	children: React.PropTypes.any,
-	isValid: React.PropTypes.bool,
-	goodClasses: React.PropTypes.string.isRequired,
-	badClass: React.PropTypes.string.isRequired
+	children: PropTypes.any,
+	isValid: PropTypes.bool,
+	goodClasses: PropTypes.string.isRequired,
+	badClass: PropTypes.string.isRequired
 }
