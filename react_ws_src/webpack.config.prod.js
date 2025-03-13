@@ -5,9 +5,9 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin')
 module.exports = {
 	devtool: 'source-map',
 	entry: [
-		'../src/app'
+		'./src/app'
 	],
-	context: path.join(__dirname, 'static'),
+	context: path.join(__dirname),
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: 'bundle.js',
@@ -15,15 +15,18 @@ module.exports = {
 	},
 	plugins: [
 		new ExtractTextPlugin('style.css'),
-		new webpack.optimize.OccurenceOrderPlugin(),
+		new webpack.optimize.OccurrenceOrderPlugin(),
 		new webpack.DefinePlugin({
 			'process.env': {
 				'NODE_ENV': JSON.stringify('production')
 			}
 		}),
 		new webpack.optimize.UglifyJsPlugin({
-			compressor: {
+			compress: {
 				warnings: false
+			},
+			output: {
+				comments: false
 			}
 		})
 	],
@@ -31,23 +34,23 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.(ico|gif|png|html|jpg|swf|xml|svg)$/,
-				loader: 'file?name=[path][name].[ext]'
+				loader: 'file-loader?name=[path][name].[ext]'
 			},
 			{
 				test: /\.scss$/,
 				loader: ExtractTextPlugin.extract(
-					'style',
-					'css!sass'
+					'style-loader',
+					'css-loader!sass-loader'
 				)
 			},
 			{
 				test: /\.jsx?/,
-				loaders: ['babel'],
+				loaders: ['babel-loader'],
 				include: path.join(__dirname, 'src')
 			},
 			{
 				test: /(flickity|fizzy-ui-utils|get-size|unipointer|imagesloaded)/,
-				loader: 'imports?define=>false&this=>window'
+				loader: 'imports-loader?define=>false&this=>window'
 			},
 		]
 	},
