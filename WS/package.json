@@ -13,10 +13,23 @@
 	"scripts": {
 		"start": "node Xttt.js",
 		"start:forever": "forever start -o /var/www/socket/logs/out.log -e /var/www/socket/logs/err.log -a /var/www/socket/quiz.js",
-		"start:forever_win": "forever -c node -l logs/forever.log -o logs/out.log -e logs/err.log -a quiz.js"
+		"start:forever_win": "forever -c node -l logs/forever.log -o logs/out.log -e logs/err.log -a quiz.js",
+		"test": "jest",
+		"test:watch": "jest --watch"
 	},
 	"dependencies": {
 		"express": "^4.14.0",
 		"socket.io": "^1.4.8"
+	},
+	"devDependencies": {
+		"jest": "^23.6.0",
+		"socket.io-client": "^1.4.8"
+	},
+	"jest": {
+		"testEnvironment": "node",
+		"testMatch": [
+			"**/__tests__/**/*.test.js"
+		],
+		"clearMocks": true
 	}
 }
