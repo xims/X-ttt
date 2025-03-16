@@ -105,69 +105,68 @@ class Header extends React.Component {
       );
     }
 
-    return (
-      <header>
-        <Navbar
-          bg="white"
-          expand="md"
-          className="shadow-sm py-2 position-sticky top-0"
-          expanded={expanded}
-          onToggle={this.toggleNavbar}
-        >
-          <Container>
-            <Navbar.Brand
-              as={Link}
-              to="/"
-              className="d-flex align-items-center"
-            >
-              <img
-                src="/logo192.png"
-                alt="Logo"
-                className="app-logo me-2"
-                width="40"
-                height="40"
-              />
-              <span className="site-title fw-bold">X Tic Tac Toe</span>
-            </Navbar.Brand>
+    // return (
+    //   <header>
+    //     <Navbar
+    //       bg="white"
+    //       expand="md"
+    //       className="shadow-sm py-2 position-sticky top-0"
+    //       expanded={expanded}
+    //       onToggle={this.toggleNavbar}
+    //     >
+    //       <Container>
+    //         <Navbar.Brand
+    //           as={Link}
+    //           to="/"
+    //           className="d-flex align-items-center"
+    //         >
+    //           {/* <img
+    //             src="/logo192.png"
+    //             alt="Logo"
+    //             className="app-logo me-2"
+    //             width="40"
+    //             height="40"
+    //           /> */}
+    //         </Navbar.Brand>
 
-            <Navbar.Toggle aria-controls="main-navbar" className="border-0">
-              <i className="fas fa-bars"></i>
-            </Navbar.Toggle>
+    //         {/* <Navbar.Toggle aria-controls="main-navbar" className="border-0">
+    //           <i className="fas fa-bars"></i>
+    //         </Navbar.Toggle> */}
 
-            <Navbar.Collapse id="main-navbar">
-              <Nav className="ms-auto">
-                {navItems.map((item) => (
-                  <Nav.Item key={item.id}>
-                    <Nav.Link
-                      as={Link}
-                      to={item.url}
-                      className="px-3 py-2 d-flex align-items-center"
-                      onClick={() => expanded && this.toggleNavbar()}
-                    >
-                      <i className={`fas fa-${item.icon} me-2`}></i>
-                      <span>{item.title}</span>
-                    </Nav.Link>
-                  </Nav.Item>
-                ))}
-                <Nav.Item>
-                  <Nav.Link
-                    as={Link}
-                    to="/ttt"
-                    className="ms-md-3 mt-2 mt-md-0 btn btn-primary text-white px-3 py-2"
-                    onClick={() => expanded && this.toggleNavbar()}
-                  >
-                    <i className="fas fa-play-circle me-2"></i>
-                    <span>Play Now</span>
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+    //         <Navbar.Collapse id="main-navbar">
+    //           <Nav className="ms-auto">
+    //             {navItems.map((item) => (
+    //               <Nav.Item key={item.id}>
+    //                 <Nav.Link
+    //                   as={Link}
+    //                   to={item.url}
+    //                   className="px-3 py-2 d-flex align-items-center"
+    //                   onClick={() => expanded && this.toggleNavbar()}
+    //                 >
+    //                   <i className={`fas fa-${item.icon} me-2`}></i>
+    //                   <span>{item.title}</span>
+    //                 </Nav.Link>
+    //               </Nav.Item>
+    //             ))}
+    //             <Nav.Item>
+    //               <Nav.Link
+    //                 as={Link}
+    //                 to="/ttt"
+    //                 className="ms-md-3 mt-2 mt-md-0 btn btn-primary text-white px-3 py-2"
+    //                 onClick={() => expanded && this.toggleNavbar()}
+    //               >
+    //                 <i className="fas fa-play-circle me-2"></i>
+    //                 <span>Play Now</span>
+    //               </Nav.Link>
+    //             </Nav.Item>
+    //           </Nav>
+    //         </Navbar.Collapse>
+    //       </Container>
+    //     </Navbar>
 
-        <MessageBar />
-      </header>
-    );
+    //     <MessageBar />
+    //   </header>
+    // );
   }
   // <li className='showMobile'>
   // 	<Link ref='lnkMenu' className='menu no-interfere' to='' onClick={this.showHomeClicked.bind(this)}>menu</Link>

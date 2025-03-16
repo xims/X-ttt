@@ -186,7 +186,6 @@ const App = () => {
   return (
     <ErrorBoundary>
       <div className="app">
-        <h1>X Tic Tac Toe</h1>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/pg/:page" element={<TxtPage />} />

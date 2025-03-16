@@ -44,12 +44,9 @@ export default class Main extends Component {
               <Row className="align-items-center g-5">
                 <Col lg={6} md={12} className="order-lg-1 order-2">
                   <div className="hero-content">
-                    <h1 className="hero-title display-3 fw-bold">
-                      X Tic Tac Toe
+                    <h1 className="hero-title display-4 fw-bold text-primary mb-3">
+                      Tic Tac Toe Multiplayer Strategy Game
                     </h1>
-                    <p className="hero-subtitle fs-4 text-primary mb-3">
-                      Multiplayer Strategy Game
-                    </p>
                     <div className="hero-divider"></div>
                     <p className="hero-description lead mb-4">
                       Challenge your friends to a game of strategy and skill!
@@ -64,15 +61,15 @@ export default class Main extends Component {
                         className="d-flex align-items-center"
                       >
                         <span>Play Now</span>
-                        <i className="ms-2 fa fa-arrow-right"></i>
+                        {/* <i className="ms-2 fa fa-arrow-right"></i> */}
                       </Button>
-                      <Button
+                      {/* <Button
                         href="#how-to-play"
                         variant="outline-secondary"
                         size="lg"
                       >
                         How to Play
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 </Col>
