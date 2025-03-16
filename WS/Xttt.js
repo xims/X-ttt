@@ -7,10 +7,12 @@ var numCPUs = require("os").cpus().length;
 if (cluster.isMaster) {
   console.log(`Master ${process.pid} is running`);
 
-  // Fork workers based on CPU count (but limit to a reasonable number)
-  const workerCount = Math.min(numCPUs, 4);
+  // IMPORTANT: For simplicity in this game, we'll use only ONE worker
+  // This avoids issues with players being in separate worker processes
+  // A proper solution would use Redis or another shared data store for players
+  const workerCount = 1; // Limit to 1 worker to avoid player pairing issues
 
-  console.log(`Starting ${workerCount} workers...`);
+  console.log(`Starting ${workerCount} worker(s)...`);
   for (let i = 0; i < workerCount; i++) {
     cluster.fork();
   }
@@ -23,13 +25,28 @@ if (cluster.isMaster) {
   // Workers share the TCP connection
   var app = express();
   var server = require("http").createServer(app);
+
+  // Configure Socket.io with appropriate options
   io = require("socket.io")(server, {
-    // Add adapter for multi-process synchronization
-    adapter: require("socket.io-adapter-cluster")(),
+    // Remove adapter for single worker setup
+    // adapter: require("socket.io-adapter-cluster")(),
+    // Configure CORS to allow connections from any origin
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+      allowedHeaders: ["content-type"],
+      credentials: true,
+    },
+    // Connection timeout in milliseconds
+    connectTimeout: 15000,
+    // Transport configurations
+    transports: ["websocket", "polling"],
   });
+
   var path = require("path");
 
-  util = require("util"); // Utility resources (logging, object inspection, etc)
+  // Utility resources, but no longer using util.log - it's deprecated
+  var util = require("util");
 
   /**************************************************
    ** GAME VARIABLES
@@ -64,9 +81,14 @@ if (cluster.isMaster) {
     res.sendFile(path.join(__dirname, "public", "index.html"));
   });
 
+  // Load game handlers
   require("./XtttGame.js");
 
-  io.on("connection", set_game_sock_handlers);
+  // Socket.io connection handler
+  io.on("connection", function (socket) {
+    console.log(`New socket connection established: ${socket.id}`);
+    set_game_sock_handlers(socket);
+  });
 
   console.log(`Worker ${process.pid} started`);
 }

@@ -1,0 +1,123 @@
+// Utility styles
+
+// FontAwesome Icon Fallbacks
+.fa {
+  font-family: "FontAwesome", Arial, sans-serif;
+  display: inline-block;
+  
+  // Provide specific fallback content for common icons
+  &.fa-home:before {
+    content: "🏠";
+  }
+  
+  &.fa-gamepad:before {
+    content: "🎮";
+  }
+  
+  &.fa-info-circle:before {
+    content: "ℹ️";
+  }
+  
+  &.fa-users:before {
+    content: "👥";
+  }
+  
+  &.fa-clock-o:before {
+    content: "⏱️";
+  }
+  
+  &.fa-trophy:before {
+    content: "🏆";
+  }
+  
+  &.fa-mobile:before {
+    content: "📱";
+  }
+  
+  &.fa-play-circle:before {
+    content: "▶️";
+  }
+  
+  &.fa-arrow-right:before {
+    content: "→";
+  }
+  
+  &.fa-caret-right:before {
+    content: "▶";
+  }
+  
+  &.fa-times:before {
+    content: "×";
+  }
+  
+  &.fa-bars:before {
+    content: "☰";
+  }
+  
+  &.fa-github:before {
+    content: "🔗";
+  }
+  
+  &.fa-react:before {
+    content: "⚛️";
+  }
+  
+  &.fa-node:before {
+    content: "📦";
+  }
+  
+  &.fa-plug:before {
+    content: "🔌";
+  }
+}
+
+// Navigation styles override to ensure visibility
+.nav-list {
+  list-style-type: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  
+  .nav-item {
+    margin: 0 0.5rem !important;
+    
+    .nav-link {
+      display: flex !important;
+      align-items: center !important;
+      text-decoration: none !important;
+      padding: 0.5rem 1rem !important;
+      border-radius: 4px !important;
+      transition: all 0.3s !important;
+      color: #333 !important;
+      
+      &:hover {
+        background-color: rgba(52, 152, 219, 0.1) !important;
+        color: #3498db !important;
+      }
+      
+      i {
+        margin-right: 8px !important;
+      }
+    }
+  }
+}
+
+// Fix for inline bullets
+li {
+  &:before {
+    display: none !important;
+  }
+}
+
+// App container wrapper
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  
+  h1 {
+    margin-top: 0;
+    padding: 20px 0;
+    text-align: center;
+  }
+} 

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import ga from 'react-ga';
+import ga from '../utils/ga-wrapper';
 import Main from '../views/Main';
 import Ttt from '../views/ttt/Ttt';
 import TxtPage from '../views/pages/Txt_page';
@@ -9,11 +9,61 @@ import Contact from '../views/pages/Contact';
 import ErrorPage from '../views/pages/ErrorPage';
 import prep_env from '../models/prep_env';
 
-console.log('App component started'); 
+// Error boundary component to catch rendering errors
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("React Error Boundary caught an error:", error, errorInfo);
+    this.setState({ error, errorInfo });
+    
+    // Display in error container if available
+    if (window.displayError) {
+      window.displayError(
+        'React Component Error',
+        `${error.toString()}\n\nComponent Stack: ${errorInfo.componentStack}`
+      );
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ 
+          padding: '20px', 
+          margin: '20px', 
+          border: '1px solid #e74c3c',
+          borderRadius: '5px',
+          backgroundColor: '#fef5f5'
+        }}>
+          <h2 style={{ color: '#e74c3c' }}>Something went wrong</h2>
+          <p>We're sorry, an error occurred while rendering this component.</p>
+          <p>Error: {this.state.error && this.state.error.toString()}</p>
+          <details style={{ whiteSpace: 'pre-wrap', marginTop: '10px' }}>
+            <summary>Component Stack</summary>
+            {this.state.errorInfo && this.state.errorInfo.componentStack}
+          </details>
+          <div style={{ marginTop: '20px' }}>
+            <button onClick={() => window.location.reload()}>
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 // Initialize app object before any components render
 if (!window.app) {
-  // Define event handling methods similar to Ampersand/Backbone
   const eventHandlers = {};
   
   window.app = {
@@ -33,11 +83,10 @@ if (!window.app) {
       show_page: 'show_page',
     },
     show_page: (u) => {
-      console.log('Default show_page handler', u);
+      // Default show_page implementation
     },
     // Add event methods
     on: (eventName, callback) => {
-      console.log(`Registering handler for ${eventName}`);
       if (!eventHandlers[eventName]) {
         eventHandlers[eventName] = [];
       }
@@ -52,33 +101,36 @@ if (!window.app) {
       }
     },
     trigger: (eventName, ...args) => {
-      console.log(`Triggering event ${eventName}`, args);
       if (!eventHandlers[eventName]) return;
       eventHandlers[eventName].forEach(callback => {
         try {
           callback(...args);
         } catch (e) {
-          console.error(`Error in event handler for ${eventName}:`, e);
+          // Error in event handler
         }
       });
     }
   };
-  console.log('window.app initialized outside component');
 }
 
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAppReady, setIsAppReady] = useState(false);
+  const [appError, setAppError] = useState(null);
 
   // Define startApp before it's used in useEffect
   const startApp = () => {
-    console.log('Starting app initialization');
-    // Initialize Google Analytics
-    if (window.app.settings.ws_conf && window.app.settings.ws_conf.conf && window.app.settings.ws_conf.conf.ga_acc) {
-      ga.initialize(window.app.settings.ws_conf.conf.ga_acc.an, { debug: true });
-      ga.pageview(window.location.pathname);
-    } else {
-      console.warn('GA config not available');
+    try {
+      // Initialize Google Analytics
+      if (window.app.settings.ws_conf && window.app.settings.ws_conf.conf && window.app.settings.ws_conf.conf.ga_acc) {
+        ga.initialize(window.app.settings.ws_conf.conf.ga_acc.an);
+        ga.pageview(window.location.pathname);
+      }
+      
+      setIsAppReady(true);
+    } catch (error) {
+      setAppError(error.message || 'Error initializing application');
     }
   };
 
@@ -97,39 +149,55 @@ const App = () => {
           navigate('/');
           break;
         default:
-          console.log('show_page event with:', u);
           navigate(u);
           break;
       }
     };
 
-    // Update the show_page method
-    window.app.show_page = handleShowPage;
-    console.log('Updated window.app.show_page');
+    try {
+      // Update the show_page method
+      window.app.show_page = handleShowPage;
 
-    // Initialize environment
-    prep_env(startApp);
+      // Initialize environment
+      prep_env(startApp);
 
-    window.addEventListener('show_page', handleShowPage);
+      window.addEventListener('show_page', handleShowPage);
+    } catch (error) {
+      setAppError(error.message || 'Error setting up application');
+    }
 
     return () => {
       window.removeEventListener('show_page', handleShowPage);
     };
   }, [navigate]);
 
+  // Show loading or error state
+  if (appError) {
+    return (
+      <div style={{ padding: '20px', color: 'red' }}>
+        <h1>Application Error</h1>
+        <p>{appError}</p>
+        <button onClick={() => window.location.reload()}>Reload Page</button>
+      </div>
+    );
+  }
+
+  // Main app render
   return (
-    <div className="app">
-      <h1>X Tic Tac Toe</h1>
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/pg/:page" element={<TxtPage />} />
-        <Route path="/ttt" element={<Ttt />} />
-        <Route path="/pupg/:pu_page" element={<PopUpPage />} />
-        <Route path="/contact-us" element={<Contact />} />
-        <Route path="/error/404" element={<ErrorPage />} />
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
-    </div>
+    <ErrorBoundary>
+      <div className="app">
+        <h1>X Tic Tac Toe</h1>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/pg/:page" element={<TxtPage />} />
+          <Route path="/ttt" element={<Ttt />} />
+          <Route path="/pupg/:pu_page" element={<PopUpPage />} />
+          <Route path="/contact-us" element={<Contact />} />
+          <Route path="/error/404" element={<ErrorPage />} />
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+      </div>
+    </ErrorBoundary>
   );
 };
 

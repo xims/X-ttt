@@ -43,7 +43,11 @@ export default class GameMain extends Component {
       ["c3", "c5", "c7"],
     ];
 
-    this.username = "Player";
+    // Get username from window.app.settings if available, otherwise use "Player"
+    this.username =
+      window.app && window.app.settings && window.app.settings.curr_user
+        ? window.app.settings.curr_user.name
+        : "Player";
 
     // Bind methods once in constructor instead of in render
     this.click_cell = this.click_cell.bind(this);
@@ -64,6 +68,9 @@ export default class GameMain extends Component {
         victoryMessage: "",
         socketError: null,
         winningCells: [],
+        showSymbolSelection: false,
+        playerSymbol: null, // 'x' or 'o'
+        opponentSymbol: null, // Will be the opposite of playerSymbol
       };
     else {
       this.sock_start();
@@ -77,11 +84,12 @@ export default class GameMain extends Component {
         victoryMessage: "",
         socketError: null,
         winningCells: [],
+        showSymbolSelection: false,
+        playerSymbol: null,
+        opponentSymbol: null,
       };
     }
   }
-
-  //	------------------------	------------------------	------------------------
 
   componentDidMount() {
     // Use refs instead of document.getElementById
@@ -168,31 +176,117 @@ export default class GameMain extends Component {
     }
   }
 
-  //	------------------------	------------------------	------------------------
-
   sock_start() {
-    const socketUrl = "http://localhost:3001";
+    // Get the origin for the current window
+    const origin = window.location.origin;
+    console.log("Attempting to connect to socket server at:", origin);
+    console.log("Username being sent:", this.username);
 
     try {
-      this.socket = io(socketUrl);
+      // Configure Socket.io with explicit options
+      this.socket = io(origin, {
+        transports: ["websocket", "polling"], // Try WebSocket first, fall back to polling
+        reconnectionAttempts: 5, // Try to reconnect 5 times
+        reconnectionDelay: 1000, // Start with 1 second delay between attempts
+        timeout: 10000, // 10 second connection timeout
+        autoConnect: true, // Connect automatically
+        forceNew: true, // Force a new connection
+      });
 
-      this.socket.on("connect", (data) => {
+      // Connection monitoring events
+      this.socket.on("connect", () => {
+        console.log("Socket connected successfully with ID:", this.socket.id);
+        this.setState({
+          socketError: null,
+          game_stat: "Connected - waiting for opponent",
+        });
+        console.log("Emitting 'new player' event with name:", this.username);
         this.socket.emit("new player", { name: this.username });
       });
 
+      // Debug all incoming socket events
+      this.socket.onAny((eventName, ...args) => {
+        console.log(`SOCKET EVENT [${eventName}]:`, args);
+      });
+
       this.socket.on("pair_players", (data) => {
+        console.log("Paired with player:", data.opp.name);
+        console.log("Full pairing data:", JSON.stringify(data));
+        console.log(
+          "Game mode assigned:",
+          data.mode === "m" ? "Master" : "Slave"
+        );
+
+        // Set a flag to track that we received the pairing event
+        window._receivedPairingEvent = true;
+
+        // For player 1 (master), show symbol selection popup
+        // Player 2 (slave) will receive the symbol choice from player 1
+        const isMaster = data.mode === "m";
+
+        this.setState(
+          {
+            next_turn_ply: isMaster, // Master goes first
+            game_play: true,
+            game_stat: "Playing with " + data.opp.name,
+            oppName: data.opp.name, // Store opponent name in state
+            showSymbolSelection: isMaster, // Only show the selection to player 1
+            isMaster: isMaster,
+          },
+          () => {
+            // After state update, verify the UI is reflecting the pairing
+            console.log(
+              "State updated after pairing. Game state:",
+              this.state.game_play ? "Playing" : "Not playing",
+              "Game status:",
+              this.state.game_stat
+            );
+          }
+        );
+      });
+
+      // Add handler for symbol_assigned event
+      this.socket.on("symbol_assigned", (data) => {
+        console.log("Symbol assigned by opponent:", data);
         this.setState({
-          next_turn_ply: data.mode === "m",
+          playerSymbol: data.symbol,
+          opponentSymbol: data.opponentSymbol,
+          next_turn_ply: data.yourTurn,
+        });
+      });
+
+      // Add handler for reconnect_game event
+      this.socket.on("reconnect_game", (data) => {
+        console.log("Game reconnected with opponent:", data.opponent.name);
+
+        this.setState({
           game_play: true,
-          game_stat: "Playing with " + data.opp.name,
+          next_turn_ply: data.yourTurn,
+          game_stat: "Playing with " + data.opponent.name,
+          oppName: data.opponent.name,
+          playerSymbol: data.symbol,
+          opponentSymbol: data.opponentSymbol,
+          cell_vals: {}, // Reset the board
+          showVictoryNotification: false,
         });
       });
 
       this.socket.on("opp_turn", this.turn_opp_live);
 
-      // Add error handling for socket connection
+      // Add opponent left handler
+      this.socket.on("opponent_left", (data) => {
+        console.log("Opponent left the game:", data.message);
+        this.setState({
+          game_play: false,
+          game_stat: "Opponent left",
+          showVictoryNotification: true,
+          victoryMessage: data.message || "Your opponent has left the game.",
+        });
+      });
+
+      // Enhanced error handling
       this.socket.on("connect_error", (error) => {
-        console.error("Socket connection error:", error);
+        console.error("Socket connection error:", error.message);
         this.setState({
           socketError: "Failed to connect to game server. Please try again.",
           game_stat: "Connection error",
@@ -206,6 +300,15 @@ export default class GameMain extends Component {
           game_stat: "Server error",
         });
       });
+
+      this.socket.on("disconnect", (reason) => {
+        console.log("Socket disconnected. Reason:", reason);
+        this.setState({
+          socketError: "Disconnected from game server: " + reason,
+          game_play: false,
+          game_stat: "Disconnected",
+        });
+      });
     } catch (error) {
       console.error("Error setting up socket:", error);
       this.setState({
@@ -214,9 +317,6 @@ export default class GameMain extends Component {
       });
     }
   }
-
-  //	------------------------	------------------------	------------------------
-  //	------------------------	------------------------	------------------------
 
   componentWillUnmount() {
     // Clean up socket connection on unmount
@@ -228,8 +328,6 @@ export default class GameMain extends Component {
       }
     }
   }
-
-  //	------------------------	------------------------	------------------------
 
   cell_cont(c) {
     const { cell_vals } = this.state;
@@ -305,8 +403,6 @@ export default class GameMain extends Component {
     }
   }
 
-  //	------------------------	------------------------	------------------------
-
   render() {
     const {
       cell_vals,
@@ -317,6 +413,9 @@ export default class GameMain extends Component {
       victoryMessage,
       socketError,
       winningCells,
+      showSymbolSelection,
+      playerSymbol,
+      opponentSymbol,
     } = this.state;
     const { game_type } = this.props;
 
@@ -340,7 +439,94 @@ export default class GameMain extends Component {
         )}
 
         {game_play && next_turn_ply && (
-          <Timer timeLimit={game_type.timeLimit} onTimeUp={this.handleTimeUp} />
+          <Timer
+            key={`timer-${Object.keys(cell_vals).length}`}
+            timeLimit={game_type.timeLimit}
+            onTimeUp={this.handleTimeUp}
+          />
+        )}
+
+        {/* Symbol Selection Popup */}
+        {showSymbolSelection && (
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "rgba(255, 255, 255, 0.95)",
+              padding: "20px",
+              borderRadius: "10px",
+              boxShadow: "0 0 20px rgba(0,0,0,0.5)",
+              zIndex: 30,
+              textAlign: "center",
+              backdropFilter: "blur(5px)",
+              border: "2px solid #2196F3",
+              maxWidth: "80%",
+              width: "300px",
+            }}
+            role="dialog"
+            aria-labelledby="symbol-selection"
+          >
+            <h2
+              id="symbol-selection"
+              style={{ margin: "0 0 20px 0", color: "#333" }}
+            >
+              Choose Your Symbol
+            </h2>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                gap: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              <button
+                onClick={() => this.selectSymbol("x")}
+                style={{
+                  padding: "15px 25px",
+                  backgroundColor: "#ff5252",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  width: "100px",
+                  height: "100px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                X
+              </button>
+              <button
+                onClick={() => this.selectSymbol("o")}
+                style={{
+                  padding: "15px 25px",
+                  backgroundColor: "#2979ff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  width: "100px",
+                  height: "100px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                O
+              </button>
+            </div>
+            <p style={{ color: "#666", marginBottom: "0" }}>
+              Choose X to go first or O to go second
+            </p>
+          </div>
         )}
 
         <div
@@ -644,9 +830,6 @@ export default class GameMain extends Component {
     );
   }
 
-  //	------------------------	------------------------	------------------------
-  //	------------------------	------------------------	------------------------
-
   click_cell(e) {
     if (!this.state.next_turn_ply || !this.state.game_play) return;
 
@@ -656,9 +839,6 @@ export default class GameMain extends Component {
     if (this.props.game_type.type != "live") this.turn_ply_comp(cell_id);
     else this.turn_ply_live(cell_id);
   }
-
-  //	------------------------	------------------------	------------------------
-  //	------------------------	------------------------	------------------------
 
   turn_ply_comp(cell_id) {
     let { cell_vals } = this.state;
@@ -689,8 +869,6 @@ export default class GameMain extends Component {
       }
     );
   }
-
-  //	------------------------	------------------------	------------------------
 
   turn_comp() {
     let { cell_vals } = this.state;
@@ -728,15 +906,15 @@ export default class GameMain extends Component {
     );
   }
 
-  //	------------------------	------------------------	------------------------
-  //	------------------------	------------------------	------------------------
-
   turn_ply_live(cell_id) {
-    let { cell_vals } = this.state;
+    let { cell_vals, playerSymbol } = this.state;
+
+    // Default to 'x' if symbol not set yet (shouldn't happen)
+    const symbol = playerSymbol || "x";
 
     // Create a new cell_vals object to avoid direct state mutation
     const newCellVals = { ...cell_vals };
-    newCellVals[cell_id] = "x";
+    newCellVals[cell_id] = symbol;
 
     // Use ref instead of string ref
     if (this.cellRefs[cell_id].current) {
@@ -752,6 +930,7 @@ export default class GameMain extends Component {
     // Wrap socket emit in try-catch for error handling
     try {
       this.socket.emit("ply_turn", { cell_id: cell_id });
+      console.log("Sent turn to server, cell_id:", cell_id);
     } catch (error) {
       console.error("Error sending turn to server:", error);
       this.setState({
@@ -759,28 +938,32 @@ export default class GameMain extends Component {
       });
     }
 
-    // Update state properly
+    // Update state properly - explicitly toggle next_turn_ply to false first
     this.setState(
       {
         cell_vals: newCellVals,
+        next_turn_ply: false, // Immediately mark it as NOT player's turn
       },
       () => {
+        console.log("Player turn complete, now opponent's turn");
         // Call check_turn after state is updated
         this.check_turn();
       }
     );
   }
 
-  //	------------------------	------------------------	------------------------
-
   turn_opp_live(data) {
-    let { cell_vals } = this.state;
+    let { cell_vals, opponentSymbol } = this.state;
+    console.log("Received opponent turn:", data.cell_id);
+
+    // Default to 'o' if symbol not set yet (shouldn't happen)
+    const symbol = opponentSymbol || "o";
 
     const c = data.cell_id;
 
     // Create a new cell_vals object to avoid direct state mutation
     const newCellVals = { ...cell_vals };
-    newCellVals[c] = "o";
+    newCellVals[c] = symbol;
 
     // Use ref instead of string ref
     if (this.cellRefs[c].current) {
@@ -793,24 +976,23 @@ export default class GameMain extends Component {
       });
     }
 
-    // Update state properly
+    // Update state properly - explicitly toggle next_turn_ply to true
     this.setState(
       {
         cell_vals: newCellVals,
+        next_turn_ply: true, // Immediately mark it as player's turn
       },
       () => {
+        console.log("Opponent turn complete, now player's turn");
         // Call check_turn after state is updated
         this.check_turn();
       }
     );
   }
 
-  //	------------------------	------------------------	------------------------
-  //	------------------------	------------------------	------------------------
-  //	------------------------	------------------------	------------------------
-
   check_turn() {
-    const { cell_vals } = this.state;
+    const { cell_vals, next_turn_ply } = this.state;
+    console.log("Checking turn status, next_turn_ply:", next_turn_ply);
 
     let win = false;
     let set;
@@ -923,7 +1105,10 @@ export default class GameMain extends Component {
         ease: Power4.easeInOut,
       });
 
-      const winner = cell_vals[set[0]] == "x" ? "You" : "Opponent";
+      // Determine the winner based on the symbol in the winning cells
+      const winningSymbol = cell_vals[set[0]];
+      const isPlayerWinner = winningSymbol === this.state.playerSymbol;
+      const winner = isPlayerWinner ? "You" : "Opponent";
       const victoryMessage = `${winner} won the game!`;
 
       // Update game state but keep game playable until animations complete
@@ -953,14 +1138,8 @@ export default class GameMain extends Component {
         }, 1200);
       }, 1000);
 
-      // Handle socket
-      if (this.socket) {
-        try {
-          this.socket.disconnect();
-        } catch (error) {
-          console.error("Error disconnecting socket:", error);
-        }
-      }
+      // We no longer disconnect the socket when the game ends
+      // This allows us to reconnect with the same opponent for a new game
     } else if (fin) {
       // Handle draw - show clear visual indication
       // Highlight all cells to indicate draw
@@ -990,29 +1169,32 @@ export default class GameMain extends Component {
           });
         }, 1500);
       }, 1000);
-
-      // Handle socket
-      if (this.socket) {
-        try {
-          this.socket.disconnect();
-        } catch (error) {
-          console.error("Error disconnecting socket:", error);
-        }
-      }
     } else {
       // Normal gameplay continues
-      if (this.props.game_type.type != "live" && this.state.next_turn_ply) {
+      if (this.props.game_type.type != "live" && next_turn_ply) {
         setTimeout(this.turn_comp, rand_to_fro(500, 1000));
       }
 
-      this.setState({
-        next_turn_ply: !this.state.next_turn_ply,
-        game_stat: currentGameStat,
-      });
+      // For live games, we already set next_turn_ply in turn_ply_live and turn_opp_live
+      // Only toggle turn for non-live games
+      if (this.props.game_type.type != "live") {
+        this.setState({
+          next_turn_ply: !next_turn_ply,
+          game_stat: currentGameStat,
+        });
+      } else {
+        // For live games, just update the game status text
+        if (
+          currentGameStat !==
+          "Playing with " + (this.state.oppName || "opponent")
+        ) {
+          this.setState({
+            game_stat: currentGameStat,
+          });
+        }
+      }
     }
   }
-
-  //	------------------------	------------------------	------------------------
 
   end_game() {
     if (this.socket) {
@@ -1052,7 +1234,6 @@ export default class GameMain extends Component {
     }, 1000);
   };
 
-  // Add a new method to reset the game
   reset_game = () => {
     // Kill all GSAP animations first
     gsap.killTweensOf("td.win");
@@ -1065,56 +1246,46 @@ export default class GameMain extends Component {
       if (this.cellRefs[cellKey] && this.cellRefs[cellKey].current) {
         const cell = this.cellRefs[cellKey].current;
 
-        // Remove win class only
-        cell.classList.remove("win");
+        // More thorough cleanup - remove all classes except grid positioning classes
+        const isVbrd = cell.className.includes("vbrd");
+        const isHbrd = cell.className.includes("hbrd");
 
-        // Store original classes - critical for grid lines
-        const originalClasses = cell.className;
+        // Reset the className completely
+        cell.className = "";
 
-        // Reset styles but preserve borders
-        cell.style.backgroundColor = "";
-        cell.style.boxShadow = "";
-        cell.style.position = "relative";
-        cell.style.zIndex = "";
+        // Re-add only grid classes
+        if (isVbrd) cell.className += " vbrd";
+        if (isHbrd) cell.className += " hbrd";
 
-        // Re-apply proper dimensions and styling
-        cell.style.width = "100px";
-        cell.style.height = "100px";
+        // Complete style reset
+        cell.removeAttribute("style");
+
+        // Re-apply only the necessary base styles
         cell.style.border = "1px solid black";
         cell.style.background = "#f0f0f0";
+        cell.style.width = "100px";
+        cell.style.height = "100px";
+        cell.style.position = "relative"; // Ensure position is set for proper layout
+        cell.style.cursor = "pointer"; // Explicitly make clickable
 
-        // Re-apply border styles based on original classes
-        if (originalClasses.includes("vbrd")) {
-          cell.style.borderLeft = "7px solid #000";
-          cell.style.borderRight = "7px solid #000";
-        }
-        if (originalClasses.includes("hbrd")) {
-          cell.style.borderTop = "7px solid #000";
-          cell.style.borderBottom = "7px solid #000";
-        }
+        // Make sure any pointer-events or other interaction blocking is removed
+        cell.style.pointerEvents = "auto";
 
-        // Find and reset any icon containers and icons
-        const iconContainer = cell.querySelector("div");
-        if (iconContainer) {
-          // Reset container but maintain positioning
-          iconContainer.style.position = "relative";
-          iconContainer.style.zIndex = "15";
-          iconContainer.style.display = "flex";
-          iconContainer.style.justifyContent = "center";
-          iconContainer.style.alignItems = "center";
-          iconContainer.style.width = "100%";
-          iconContainer.style.height = "100%";
-        }
+        // Reset any ARIA attributes that might affect interaction
+        cell.setAttribute("aria-disabled", "false");
+
+        // We don't clear innerHTML here anymore to let React handle cell content
       }
     }
 
-    // Ensure the table and game board have proper styling - but WITHOUT extra borders
+    // Ensure the table and game board have proper styling
     if (this.gameBoardRef.current) {
       const gameBoardDiv = this.gameBoardRef.current;
       gameBoardDiv.style.display = "block";
       gameBoardDiv.style.opacity = "1";
       gameBoardDiv.style.border = "none"; // Remove the outer border
       gameBoardDiv.style.margin = "20px";
+      gameBoardDiv.style.pointerEvents = "auto"; // Ensure clicks are registered
 
       const table = gameBoardDiv.querySelector("table");
       if (table) {
@@ -1122,26 +1293,81 @@ export default class GameMain extends Component {
         table.style.borderCollapse = "collapse";
         table.style.margin = "10px";
         table.style.background = "#fff";
+        table.style.pointerEvents = "auto"; // Ensure clicks are registered
       }
     }
 
-    // Reset the game state
+    // Store the current opponent name and symbols for reconnection
+    const { oppName, playerSymbol, opponentSymbol, isMaster } = this.state;
+
+    // Reconnect the socket if it was disconnected
+    if (!this.socket || !this.socket.connected) {
+      console.log("Reconnecting socket for new game");
+      // Restart the socket connection
+      this.sock_start();
+    }
+
+    // Clear all GSAP animations
+    gsap.killTweensOf("*");
+
+    // Reset the game state - this is what actually controls the cells' content
     this.setState(
       {
-        cell_vals: {},
-        next_turn_ply: true,
+        cell_vals: {}, // Empty board - critical for React to re-render empty cells
+        next_turn_ply: playerSymbol === "x", // X always goes first
         game_play: true,
-        game_stat: "Start game",
+        game_stat: oppName ? `Playing with ${oppName}` : "Start game",
         showVictoryNotification: false,
         victoryMessage: "",
         winningCells: [],
         winningSet: null,
+        // Preserve player symbols
+        playerSymbol,
+        opponentSymbol,
+        isMaster,
+        oppName,
       },
       () => {
-        // Force a re-render and ensure all styles are correct
-        this.forceUpdate();
+        // After state update, notify the server
+        if (this.socket && this.socket.connected && oppName) {
+          console.log("Emitting play_again event to reconnect with", oppName);
+          this.socket.emit("play_again", {
+            playerSymbol,
+            opponentSymbol,
+            oppName,
+          });
+        }
       }
     );
+  };
+
+  // Add this method to handle symbol selection
+  selectSymbol = (symbol) => {
+    const oppositeSymbol = symbol === "x" ? "o" : "x";
+    console.log(
+      `Player selected symbol: ${symbol}, opponent will be: ${oppositeSymbol}`
+    );
+
+    // Update local state
+    this.setState({
+      playerSymbol: symbol,
+      opponentSymbol: oppositeSymbol,
+      showSymbolSelection: false, // Hide the popup
+      // Player 1 (master) should start if they chose 'x', otherwise player 2 starts
+      next_turn_ply: this.state.isMaster
+        ? symbol === "x"
+        : oppositeSymbol === "x",
+    });
+
+    // Send the symbol choice to the opponent via the server
+    try {
+      this.socket.emit("symbol_choice", {
+        playerSymbol: symbol,
+        opponentSymbol: oppositeSymbol,
+      });
+    } catch (error) {
+      console.error("Error sending symbol choice:", error);
+    }
   };
 }
 

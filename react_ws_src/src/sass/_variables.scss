@@ -1,13 +1,98 @@
-$hdrFont : 'Montserrat', sans-serif;
-$bodyFont : 'Roboto', sans-serif;
-$featureFont : 'Orbitron', sans-serif;
+// Colors
+$primary: #3498db;
+$primary-dark: #2980b9;
+$secondary: #2c3e50;
+$secondary-dark: #1a252f;
+$success: #2ecc71;
+$danger: #e74c3c;
+$warning: #f39c12;
+$info: #3498db;
+$light: #ecf0f1;
+$dark: #2c3e50;
+$grey: #95a5a6;
+$light-grey: #bdc3c7;
+$white: #ffffff;
+$black: #000000;
 
-$colorPrimary : #dde;
-$colorPrimaryDark : #2b0066;
-$colorSecondary : #026;
-$colorSecondaryDark : #b4021d;
+// Typography
+$bodyFont: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$hdrFont: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$codeFont: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+
+// Font sizes
+$font-size-base: 1rem;
+$font-size-sm: 0.875rem;
+$font-size-lg: 1.25rem;
+$font-size-xl: 1.5rem;
+$font-size-xxl: 2rem;
+
+// Font weights
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-black: 800;
+
+// Line heights
+$line-height-sm: 1.2;
+$line-height-base: 1.5;
+$line-height-lg: 1.8;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-xxl: 3rem;
+
+// Borders
+$border-radius-sm: 0.25rem;
+$border-radius: 0.5rem;
+$border-radius-lg: 0.75rem;
+$border-radius-xl: 1rem;
+$border-radius-xxl: 1.5rem;
+$border-width: 1px;
+$border-width-lg: 2px;
+
+// Shadows
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 5px 15px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+$shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.2);
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-base: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Breakpoints
+$breakpoint-xs: 0;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
+
+// Z-index
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// Container max widths
+$container-max-width-sm: 540px;
+$container-max-width-md: 720px;
+$container-max-width-lg: 960px;
+$container-max-width-xl: 1140px;
+$container-max-width-xxl: 1320px;
+
+$featureFont : 'Orbitron', sans-serif;
 $pin : rgba(255,255,255,0.2);
-$grey : #f4f4f4;
 $bodyText: #555;
 
 

@@ -51,7 +51,7 @@ section#simple_popup{
 		position: absolute;
 		top:0;
 		right: 0px;
-		color: $colorSecondary;
+		color: $secondary;
 		display: block;
 		@include font-size(37px);
 
@@ -123,49 +123,49 @@ section#simple_popup{
 			label{
 				.required {
 					display: inline;
-					color:$colorSecondary;
+					color: $secondary;
 				}
 			}
 			.input {
 					@include textInput(90%);
-					border: 1px solid $colorSecondary;
-					color: $colorSecondary;
+					border: 1px solid $secondary;
+					color: $secondary;
 			}
 			.input.textarea {
 					@include textInput(95%);
-					border: 1px solid $colorSecondary;
+					border: 1px solid $secondary;
 					height: 100px;
 					line-height:1.5em;
 					padding-top:10px;
 			}				
 			::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-			    color:    $colorSecondary;
+			    color: $secondary;
 			}
 			:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-			   color:    $colorSecondary;
+			   color: $secondary;
 			   opacity:  1;
 			}
 			::-moz-placeholder { /* Mozilla Firefox 19+ */
-			   color:    $colorSecondary;
+			   color: $secondary;
 			   opacity:  1;
 			}
 			:-ms-input-placeholder { /* Internet Explorer 10-11 */
-			   color:    $colorSecondary;
+			   color: $secondary;
 			}
 			:placeholder-shown { /* Standard (https://drafts.csswg.org/selectors-4/#placeholder) */
-			  color:    $colorSecondary;
+			  color: $secondary;
 			}							
 		}
 
 		&.select_option.error select{
-		  border: 1px solid $colorSecondary;
-		  //box-shadow:0px 4px 0px 0px $colorSecondary;
-		  color: $colorSecondary;
+		  border: 1px solid $secondary;
+		  //box-shadow:0px 4px 0px 0px $secondary;
+		  color: $secondary;
 		}			
 	}
 
 	.button {
-		@include button(179px,50px,4px,$colorSecondary,$colorSecondaryDark,#fff);
+		@include button(179px,50px,4px,$secondary,$secondary-dark,#fff);
 		font-family: $hdrFont;
 		@include font-size(16px);
 		margin-top:24px;		

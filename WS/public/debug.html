@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>X TTT Debug Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+        color: #333;
+      }
+      .debug-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #3498db;
+      }
+      .error {
+        color: #e74c3c;
+        background-color: #fde2e2;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+      pre {
+        background-color: #f1f1f1;
+        padding: 10px;
+        border-radius: 4px;
+        overflow: auto;
+      }
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="debug-container">
+      <h1>X TTT Debugging Page</h1>
+      <p>This page tests basic browser functionality and DOM rendering</p>
+
+      <div id="test-rendering">
+        <h2>Rendering Test</h2>
+        <p>
+          If you can see this text, the browser is rendering HTML correctly.
+        </p>
+        <button id="test-button">Click to Test JavaScript</button>
+        <div id="js-result"></div>
+      </div>
+
+      <div id="app-debug">
+        <h2>Application Debug</h2>
+        <p>Testing React mounting:</p>
+        <div id="react-test-root"></div>
+      </div>
+
+      <div id="console-output">
+        <h2>Console Output</h2>
+        <pre id="console-log"></pre>
+      </div>
+    </div>
+
+    <script>
+      // Test basic JavaScript functionality
+      document
+        .getElementById("test-button")
+        .addEventListener("click", function () {
+          document.getElementById("js-result").innerHTML =
+            '<p style="color: green">JavaScript is working correctly!</p>';
+        });
+
+      // Capture console output
+      (function () {
+        const consoleLog = document.getElementById("console-log");
+        const oldConsoleLog = console.log;
+        const oldConsoleError = console.error;
+        const oldConsoleWarn = console.warn;
+
+        console.log = function () {
+          oldConsoleLog.apply(console, arguments);
+          appendToLog("LOG", arguments);
+        };
+
+        console.error = function () {
+          oldConsoleError.apply(console, arguments);
+          appendToLog("ERROR", arguments, true);
+        };
+
+        console.warn = function () {
+          oldConsoleWarn.apply(console, arguments);
+          appendToLog("WARN", arguments);
+        };
+
+        function appendToLog(type, args, isError) {
+          const text = Array.from(args)
+            .map((arg) =>
+              typeof arg === "object"
+                ? JSON.stringify(arg, null, 2)
+                : String(arg)
+            )
+            .join(" ");
+
+          const logEntry = document.createElement("div");
+          logEntry.className = isError ? "error" : "";
+          logEntry.innerHTML = `<strong>${type}:</strong> ${text}`;
+          consoleLog.appendChild(logEntry);
+        }
+
+        // Test logging
+        console.log("Debug page loaded");
+        console.log("Browser:", navigator.userAgent);
+        console.log("Testing console output capture");
+      })();
+
+      // Test React rendering with minimal example
+      setTimeout(function () {
+        try {
+          console.log("Checking if React and ReactDOM are available globally");
+          if (window.React && window.ReactDOM) {
+            console.log("React:", window.React.version);
+
+            const rootElement = document.getElementById("react-test-root");
+            const element = React.createElement(
+              "div",
+              null,
+              "React is working!"
+            );
+            ReactDOM.render(element, rootElement);
+            console.log("React render test succeeded");
+          } else {
+            console.error("React and/or ReactDOM not available globally");
+          }
+        } catch (error) {
+          console.error("React test error:", error);
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>

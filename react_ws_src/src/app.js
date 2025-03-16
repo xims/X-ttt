@@ -9,7 +9,7 @@ import {
   browserHistory,
 } from "react-router";
 import { createHistory, useBasename } from "history";
-import ga from "react-ga";
+import ga from "./utils/ga-wrapper";
 
 import "./sass/main.scss";
 
@@ -74,17 +74,14 @@ app.extend({
   },
 
   start_ga() {
-    ga.initialize(app.settings.ws_conf.conf.ga_acc.an, { debug: true });
-    // ga.pageview(location.pathname)
+    ga.initialize(app.settings.ws_conf.conf.ga_acc.an);
     const loclisten = browserHistory.listen((location) => {
-      // ga.send('send', location);
       ga.pageview(location.pathname);
     });
   },
 
   start() {
     const history = useBasename(createHistory)({
-      // basename: document.getElementsByTagName('base')[0] ? document.getElementsByTagName('base')[0].getAttribute('href') : ''
       basename: base_dir,
     });
 
@@ -100,7 +97,6 @@ app.extend({
         break;
 
       default:
-        console.log("show_page event with:", u);
         browserHistory.push(u);
         break;
     }

@@ -7,6 +7,8 @@ export default class MainContent extends Component {
     this.state = {
       configLoaded: false,
     };
+
+    this.handleConfigLoaded = this.handleConfigLoaded.bind(this);
   }
 
   componentDidMount() {
@@ -20,10 +22,9 @@ export default class MainContent extends Component {
   }
 
   // Method to force re-render when config is loaded
-  handleConfigLoaded = () => {
-    console.log("MainContent: Configuration loaded event received");
+  handleConfigLoaded() {
     this.setState({ configLoaded: true });
-  };
+  }
 
   render() {
     return (

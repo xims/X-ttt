@@ -1,46 +1,55 @@
 ////////////////////////////////////////////////////////////////////// IMPORT THE FONTS RIGHT AT START OF CSS
-@import url('https://fonts.googleapis.com/css?family=Orbitron:400,500,700,900');
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900');
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap');
 
 //////////////////////////////////////////////////////////////////////  NORMALIZE - FOR IMPORVED CROSS-BROWSER RENDERING
 @import '_normalize.scss';
 
-
 ////////////////////////////////////////////////////////////////////// VARIABLES
 @import '_variables.scss';
-
+@import '_mixins.scss';
 
 ////////////////////////////////////////////////////////////////////// SITEWIDE STYLES
-@import '_mixins.scss'; // MIXINS
-@import '_layout.scss'; // LAYOUT SPECIFIC
-html,body {
-	font-family: $bodyFont;
-	background-color: $colorPrimary;
-	// background-image: url(../../static/images/team-coach-bg.jpg);
-	-webkit-background-size: cover !important;
-	-moz-background-size: cover !important;
-	-o-background-size: cover !important;
-	background-size: cover !important;
-	background-position: center center !important;
-	background-repeat: no-repeat !important;
-	background-attachment:fixed;
-	// width:100%;
-	// height:100%;
-	position: relative;
+html, body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	line-height: 1.6;
+	color: #333;
+	background-color: #f8f9fa;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	min-height: 100vh;
 }
-/* apply a natural box layout model to all elements, but allowing components to change */
-html {
-  box-sizing: border-box;
+
+#root {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
+
 *, *:before, *:after {
-  box-sizing: inherit;
+	box-sizing: border-box;
 }
-input:focus,
-select:focus,
-textarea:focus,
-button:focus {
-    outline: none;
+
+// App container
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  
+  h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: $primary;
+    margin-bottom: 1rem;
+  }
+}
+
+// Font Awesome fallback for icons
+.fa {
+	display: inline-block;
 }
 
 // add selectors here and they will perform subtle animation on resize
@@ -50,26 +59,259 @@ header, img.active, #simple_popup a.close {
 .no-interfere {
 	@include transition(none)
 }
+
+// Link styling
 a {
+	color: $primary;
 	text-decoration: none;
-	cursor:pointer;
+	transition: all 0.3s ease;
+	cursor: pointer;
+	font-weight: 500;
+	
+	&:hover {
+		color: darken($primary, 15%);
+		text-decoration: underline;
+	}
 }
 
-#overlay{
-	width:100%;
-	height:100%;
-	position:fixed;
-	top:50px;
-	left:0;
-	background:rgba(0,0,0,.5);
-	z-index:1;
-	display:none;
-	//@include transition(all 400ms cubic-bezier(0.175, 0.885, 0.320, 1.275));
+// Button styles
+button, .button {
+  padding: 10px 20px;
+  background-color: $primary;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  
+  &:hover {
+    background-color: darken($primary, 10%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &.secondary {
+    background-color: $secondary;
+    
+    &:hover {
+      background-color: darken($secondary, 10%);
+    }
+  }
 }
-#overlay.show{
-	display:block;
-	//@include transition(all 400ms cubic-bezier(0.175, 0.885, 0.320, 1.275));
+
+// Container styling
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
+
+// Page sections
+section {
+  padding: 40px 0;
+  
+  h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: $dark;
+  }
+  
+  p {
+    margin-bottom: 1.5rem;
+    color: $dark;
+    line-height: 1.7;
+  }
+}
+
+// Add new Bootstrap-compatible styles after all imports but before other styles
+
+////////////////////////////////////////////////////////////////////// BOOTSTRAP OVERRIDES & ENHANCEMENTS
+// These styles enhance Bootstrap or add custom styling on top of Bootstrap
+
+// Custom variables to override Bootstrap
+$custom-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+$custom-transition: all 0.3s ease;
+$hover-lift: translateY(-5px);
+
+// Enhanced button styles
+.btn {
+  &.btn-primary, &.btn-secondary {
+    font-weight: 600;
+    border-radius: 8px;
+    transition: $custom-transition;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+      transform: $hover-lift;
+      box-shadow: $custom-shadow;
+    }
+  }
+}
+
+// Card hover effects
+.hover-card {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+// Hero section styling with Bootstrap
+.hero-section {
+  padding: 6rem 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  position: relative;
+  overflow: hidden;
+  
+  .hero-divider {
+    width: 80px;
+    height: 4px;
+    background: $primary;
+    margin-bottom: 2rem;
+  }
+  
+  // Game preview styling - modernized
+  .game-preview-container {
+    perspective: 1000px;
+  }
+  
+  .game-preview {
+    background: white;
+    border-radius: 12px;
+    box-shadow: $custom-shadow;
+    padding: 20px;
+    transform: rotate(3deg);
+    position: relative;
+    transition: $custom-transition;
+    
+    &:hover {
+      transform: rotate(0) translateZ(20px);
+    }
+    
+    &:before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+      background: rgba(0,0,0,0.05);
+      border-radius: 16px;
+      z-index: -1;
+    }
+  }
+  
+  .ttt-preview-board {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    width: 280px;
+    height: 280px;
+    background: white;
+    
+    .ttt-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .ttt-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #eaeaea;
+      width: calc(280px / 3);
+      height: calc(280px / 3);
+      position: relative;
+      
+      &.x:before, &.x:after {
+        content: '';
+        position: absolute;
+        width: 60%;
+        height: 5px;
+        background: $primary;
+        border-radius: 3px;
+      }
+      
+      &.x:before {
+        transform: rotate(45deg);
+      }
+      
+      &.x:after {
+        transform: rotate(-45deg);
+      }
+      
+      &.o:before {
+        content: '';
+        position: absolute;
+        width: 60%;
+        height: 60%;
+        border: 5px solid $secondary;
+        border-radius: 50%;
+      }
+    }
+  }
+}
+
+// Features section styling
+.features-section {
+  padding: 5rem 0;
+  
+  .feature-icon-wrap {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: $primary;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-radius: 50%;
+  }
+  
+  .section-title {
+    position: relative;
+    
+    &:after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: $primary;
+      margin: 16px auto 0;
+    }
+  }
+}
+
+// Main content layout
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+// Keep existing styles below
 
 ////////////////////////////////////////////////////////////////////// MAIN
 @import '_main_content.scss';
@@ -80,15 +322,32 @@ a {
 ////////////////////////////////////////////////////////////////////// MAIN CONTENT
 section#main_content {
 	position: relative;
-	height:100%;
+	min-height: calc(100vh - 180px); // Accounting for header and footer
+	flex: 1;
+	background-color: #f8f9fa;
+	padding: 20px 0;
 }
 
 ////////////////////////////////////////////////////////////////////// FOOTER
 @import '_footer.scss';
 
 ////////////////////////////////////////////////////////////////////// SIMPLE PAGE POPUP (TERMS, PRIVACY, CONTACT)
-@import '_simple_popup.scss';
+@import "_simple_popup.scss";
 
 ////////////////////////////////////////////////////////////////////// GAME
-@import 'ttt.scss';
+@import '_ttt_core.scss';
+
+////////////////////////////////////////////////////////////////////// UTILITY AND OVERRIDE STYLES
+@import '_utils.scss';
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+  
+  section {
+    padding: 30px 0;
+  }
+}
 

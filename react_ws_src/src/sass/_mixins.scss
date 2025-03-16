@@ -79,3 +79,213 @@
 		margin-bottom: 15px;
 	}
 }
+
+// Responsive mixins
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'xs' {
+    @media (max-width: ($breakpoint-sm - 1)) {
+      @content;
+    }
+  } @else if $breakpoint == 'sm' {
+    @media (min-width: $breakpoint-sm) and (max-width: ($breakpoint-md - 1)) {
+      @content;
+    }
+  } @else if $breakpoint == 'md' {
+    @media (min-width: $breakpoint-md) and (max-width: ($breakpoint-lg - 1)) {
+      @content;
+    }
+  } @else if $breakpoint == 'lg' {
+    @media (min-width: $breakpoint-lg) and (max-width: ($breakpoint-xl - 1)) {
+      @content;
+    }
+  } @else if $breakpoint == 'xl' {
+    @media (min-width: $breakpoint-xl) and (max-width: ($breakpoint-xxl - 1)) {
+      @content;
+    }
+  } @else if $breakpoint == 'xxl' {
+    @media (min-width: $breakpoint-xxl) {
+      @content;
+    }
+  }
+}
+
+@mixin respond-up($breakpoint) {
+  @if $breakpoint == 'xs' {
+    @content;
+  } @else if $breakpoint == 'sm' {
+    @media (min-width: $breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == 'md' {
+    @media (min-width: $breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == 'lg' {
+    @media (min-width: $breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == 'xl' {
+    @media (min-width: $breakpoint-xl) {
+      @content;
+    }
+  } @else if $breakpoint == 'xxl' {
+    @media (min-width: $breakpoint-xxl) {
+      @content;
+    }
+  }
+}
+
+@mixin respond-down($breakpoint) {
+  @if $breakpoint == 'xs' {
+    @media (max-width: ($breakpoint-sm - 1)) {
+      @content;
+    }
+  } @else if $breakpoint == 'sm' {
+    @media (max-width: ($breakpoint-md - 1)) {
+      @content;
+    }
+  } @else if $breakpoint == 'md' {
+    @media (max-width: ($breakpoint-lg - 1)) {
+      @content;
+    }
+  } @else if $breakpoint == 'lg' {
+    @media (max-width: ($breakpoint-xl - 1)) {
+      @content;
+    }
+  } @else if $breakpoint == 'xl' {
+    @media (max-width: ($breakpoint-xxl - 1)) {
+      @content;
+    }
+  }
+}
+
+// Flexbox mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Typography mixins
+@mixin heading-1 {
+  font-family: $hdrFont;
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-sm;
+  margin-bottom: $spacing-lg;
+  
+  @include respond-down('md') {
+    font-size: $font-size-xl;
+  }
+}
+
+@mixin heading-2 {
+  font-family: $hdrFont;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-sm;
+  margin-bottom: $spacing-md;
+  
+  @include respond-down('md') {
+    font-size: $font-size-lg;
+  }
+}
+
+@mixin heading-3 {
+  font-family: $hdrFont;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-base;
+  margin-bottom: $spacing-sm;
+  
+  @include respond-down('md') {
+    font-size: $font-size-base;
+  }
+}
+
+@mixin body-text {
+  font-family: $bodyFont;
+  font-size: $font-size-base;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-base;
+}
+
+// Utility mixins
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin overlay($opacity: 0.5, $color: $black) {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($color, $opacity);
+  }
+}
+
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  
+  &::before {
+    content: '';
+    display: block;
+    padding-top: ($height / $width) * 100%;
+  }
+  
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Animation mixins
+@mixin keyframes($name) {
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+@mixin animate($name, $duration: 1s, $timing: ease, $delay: 0s, $iteration: 1, $direction: normal, $fill-mode: none) {
+  animation-name: $name;
+  animation-duration: $duration;
+  animation-timing-function: $timing;
+  animation-delay: $delay;
+  animation-iteration-count: $iteration;
+  animation-direction: $direction;
+  animation-fill-mode: $fill-mode;
+}
