@@ -6,6 +6,7 @@ import TweenMax from 'gsap'
 
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
+import Timer from './Timer'
 
 export default class SetName extends Component {
 
@@ -25,13 +26,16 @@ export default class SetName extends Component {
 			['c3', 'c5', 'c7']
 		]
 
+		this.SPEED_ROUND_DURATION = 2
+		this.isSpeedRound = this.props.game_type === 'speed'
 
 		if (this.props.game_type != 'live')
 			this.state = {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: true,
-				game_stat: 'Start game'
+				game_stat: 'Start game',
+				timeUp: false
 			}
 		else {
 			this.sock_start()
@@ -40,7 +44,8 @@ export default class SetName extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: false,
-				game_stat: 'Connecting'
+				game_stat: 'Connecting',
+				timeUp: false
 			}
 		}
 	}
@@ -112,12 +117,20 @@ export default class SetName extends Component {
 		return (
 			<div id='GameMain'>
 
-				<h1>Play {this.props.game_type}</h1>
-
+				<h1>Play {this.props.game_type === 'speed' ? 'Speed Round' : this.props.game_type}</h1>
 				<div id="game_stat">
 					<div id="game_stat_msg">{this.state.game_stat}</div>
 					{this.state.game_play && <div id="game_turn_msg">{this.state.next_turn_ply ? 'Your turn' : 'Opponent turn'}</div>}
 				</div>
+
+				{this.isSpeedRound && this.state.game_play && (
+					<Timer 
+						duration={this.SPEED_ROUND_DURATION}
+						isPlayerTurn={this.state.next_turn_ply}
+						gameType={this.props.game_type}
+						onTimeUp={this.handleTimeUp.bind(this)}
+					/>
+				)}
 
 				<div id="game_board">
 					<table>
@@ -154,10 +167,12 @@ export default class SetName extends Component {
 		// console.log(e.currentTarget.id.substr(11))
 		// console.log(e.currentTarget)
 
-		if (!this.state.next_turn_ply || !this.state.game_play) return
+		if (!this.state.next_turn_ply || !this.state.game_play || this.state.timeUp) return
 
 		const cell_id = e.currentTarget.id.substr(11)
 		if (this.state.cell_vals[cell_id]) return
+
+		this.setState({ timeUp: false })
 
 		if (this.props.game_type != 'live')
 			this.turn_ply_comp(cell_id)
@@ -203,6 +218,32 @@ export default class SetName extends Component {
 
 		const c = rand_arr_elem(empty_cells_arr)
 		cell_vals[c] = 'o'
+
+		TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
+
+
+		// this.setState({
+		// 	cell_vals: cell_vals,
+		// 	next_turn_ply: true
+		// })
+
+		this.state.cell_vals = cell_vals
+
+		this.check_turn()
+	}
+
+	turn_player_random () {
+
+		let { cell_vals } = this.state
+		let empty_cells_arr = []
+
+
+		for (let i=1; i<=9; i++) 
+			!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
+		// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
+
+		const c = rand_arr_elem(empty_cells_arr)
+		cell_vals[c] = 'x'
 
 		TweenMax.from(this.refs[c], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
@@ -331,6 +372,21 @@ export default class SetName extends Component {
 	}
 
 //	------------------------	------------------------	------------------------
+
+	handleTimeUp() {
+		if (!this.state.game_play) return
+
+		this.setState({ 
+			timeUp: true,
+			game_stat: 'Time\'s up! Making random move...'
+		})
+
+		var self = this
+		setTimeout(function() {
+			self.turn_player_random()
+			self.setState({ timeUp: false })
+		}, 1000)
+	}
 
 	end_game () {
 		this.socket && this.socket.disconnect();
