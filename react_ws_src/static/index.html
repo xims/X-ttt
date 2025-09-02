@@ -13,10 +13,21 @@
 	<meta name="Description" content="X-ttt built with React and Webpack, React-router, Babel, Ampersand on Node.js/Express/Socket.io" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
+	<style>
+		#root { min-height: 100vh; }
+		h1 { font-size: 2rem; font-weight: bold; margin: 1rem 0; }
+		#GameMain { padding: 1rem; }
+		#game_board { margin: 1rem 0; }
+		#game_board table { border-collapse: collapse; }
+		#game_board td { width: 60px; height: 60px; border: 2px solid #333; text-align: center; vertical-align: middle; font-size: 1.5rem; }
+		.button { padding: 0.5rem 1rem; background: #007cba; color: white; border: none; border-radius: 4px; cursor: pointer; }
+	</style>
 
 	<!-- STYLESHEETS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="./style.css" />
+	<link rel="preload" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"></noscript>
+	<link rel="preload" href="./style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="./style.css"></noscript>
 
 	<script type="text/javascript">
 		// conf_file_b = 'http://z2/projs/kisla/X-react-starter/dev/WS/c/html_ws_conf'
@@ -30,9 +41,57 @@
 
 	<body>
 
-		<div id="root"></div>
+		<div id="root">
+			<!-- Loading state to show immediately -->
+			<div id="loading-state" style="padding: 2rem; text-align: center;">
+				<h1>Loading Tic Tac Toe Game...</h1>
+				<p>Please wait while the game loads...</p>
+			</div>
+		</div>
 
-		<script src="./bundle.js"></script>
+		<script src="./bundle.js" async></script>
+		
+		<script>
+			// Configuration constants
+			var POLLING_INTERVAL_MS = 100;
+			var MAX_POLLING_ATTEMPTS = 50;
+			var MAX_WAIT_TIME_MS = POLLING_INTERVAL_MS * MAX_POLLING_ATTEMPTS; // 5 seconds
+			
+			function hideLoadingState() {
+				var loadingState = document.getElementById('loading-state');
+				if (loadingState && loadingState.parentNode) {
+					loadingState.style.display = 'none';
+				}
+			}
+			
+			// watch for React to render by checking for React-specific elements
+			function waitForReact() {
+				// check if React has rendered by looking for React-specific attributes or elements
+				var reactRoot = document.querySelector('#root > *:not(#loading-state)');
+				if (reactRoot) {
+					hideLoadingState();
+					return;
+				}
+				
+				var attempts = 0;
+				
+				var checkInterval = setInterval(function() {
+					attempts++;
+					var reactRoot = document.querySelector('#root > *:not(#loading-state)');
+					
+					if (reactRoot || attempts >= MAX_POLLING_ATTEMPTS) {
+						clearInterval(checkInterval);
+						hideLoadingState();
+					}
+				}, POLLING_INTERVAL_MS);
+			}
+			
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', waitForReact);
+			} else {
+				waitForReact();
+			}
+		</script>
 
 	</body>
 

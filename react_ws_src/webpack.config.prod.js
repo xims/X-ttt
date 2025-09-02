@@ -23,9 +23,13 @@ module.exports = {
 		}),
 		new webpack.optimize.UglifyJsPlugin({
 			compressor: {
-				warnings: false
+				warnings: false,
+				drop_console: true,
+				drop_debugger: true
 			}
-		})
+		}),
+		new webpack.optimize.DedupePlugin(),
+		new webpack.optimize.AggressiveMergingPlugin()
 	],
 	module: {
 		loaders: [
