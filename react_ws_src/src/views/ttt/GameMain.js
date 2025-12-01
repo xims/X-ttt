@@ -31,7 +31,8 @@ export default class SetName extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: true,
-				game_stat: 'Start game'
+				game_stat: 'Start game',
+				opp_name: 'Computer'
 			}
 		else {
 			this.sock_start()
@@ -40,7 +41,8 @@ export default class SetName extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: false,
-				game_stat: 'Connecting'
+				game_stat: 'Connecting',
+				opp_name: ''
 			}
 		}
 	}
@@ -72,7 +74,8 @@ export default class SetName extends Component {
 			this.setState({
 				next_turn_ply: data.mode=='m',
 				game_play: true,
-				game_stat: 'Playing with ' + data.opp.name
+				game_stat: 'Playing with ' + data.opp.name,
+				opp_name: data.opp.name
 			})
 
 		}.bind(this));
@@ -311,6 +314,14 @@ export default class SetName extends Component {
 
 			this.socket && this.socket.disconnect();
 
+			app.settings.leaderboard.push({
+				name: app.settings.curr_user.name,
+				opponent: this.state.opp_name,
+				result: cell_vals[set[0]]=='x'? 'Win' : 'Lose',
+				game: 'Tic Tac Toe',
+				date: new Date().toLocaleString()
+			})
+
 		} else if (fin) {
 		
 			this.setState({
@@ -319,6 +330,14 @@ export default class SetName extends Component {
 			})
 
 			this.socket && this.socket.disconnect();
+
+			app.settings.leaderboard.push({
+				name: app.settings.curr_user.name,
+				opponent: this.state.opp_name,
+				result: 'Draw',
+				game: 'Tic Tac Toe',
+				date: new Date().toLocaleString()
+			})
 
 		} else {
 			this.props.game_type!='live' && this.state.next_turn_ply && setTimeout(this.turn_comp.bind(this), rand_to_fro(500, 1000));
