@@ -25,7 +25,7 @@
     "build:copyall_win": "xcopy dist\\* ..\\WS\\public /E /Y /D && xcopy static\\* ..\\WS\\public /E /Y /D",
     "build:copyupd_win": "copy dist\\bundle.js ..\\WS\\public\\ && copy dist\\style.css ..\\WS\\public\\",
     "build:copyall_nix": "cp -r dist/* ../WS/public/ && cp -r static/* ../WS/public/",
-    "build:copyupd_nix": "cp -r dist/bundle.js ../WS/public/ && cp dist/style.css ../WS/public/"
+    "build:copyupd_nix": "cp dist/bundle.js ../WS/public/ && cp dist/style.css ../WS/public/"
   },
   "dependencies": {
     "ampersand-app": "^2.0.0",
