@@ -33,9 +33,10 @@
 
 	<main_menu>
 		<pages>
-			<p		name="Home"				u="/"					ico="fa fa-home"		/>
-			<p		name="TTT"				u="/ttt"				ico="fa fa-trophy"		/>
-			<p		name="Info"				u="/pg/info"			ico="fa fa-info"		/>
+			<p		name="Home"						u="/"					ico="fa fa-home"		/>
+			<p		name="TTT"						u="/ttt"				ico="fa fa-play-circle"		/>
+			<p		name="Leader Board"		u="/leader-board"				ico="fa fa-trophy"		/>
+			<p		name="Info"						u="/pg/info"			ico="fa fa-info"		/>
 		</pages>
 	</main_menu>
 
@@ -71,10 +72,10 @@
 		<home		pg_name="Home">
 			<txt>
 			<![CDATA[
-				<div>This is a simple website built with React.js.</div>
+				<div>This is a simple X Tic Tac Toe multiplayer demo game. It's built with React.js and Node.js.</div>
 				
 				<div>
-				 view source at  <a href='https://github.com/xims/X-react-starter'>github.com/xims/X-react-starter</a></div>
+				view source at  <a href='https://github.com/xims/X-ttt'>github.com/xims/X-ttt</a></div>
 
 				<br/>
 				<h4>For demonstration purposes.</h4>
@@ -94,9 +95,10 @@
 			<![CDATA[
 		<section id='info'>
 			<div id='page-container'>
-				<h3>This is a simple example of React.js stack based website</h3>
+				<h3>This is a simple example of React.js and Node.js stack based web app</h3>
+
 				<br/>
-				<h4>Major libraries used:</h4>
+				<h4>Front End - major libraries used:</h4>
 				<ul class='simple_list'>
 					<li>react</li>
 					<li>webpack</li>
@@ -105,6 +107,14 @@
 					<li>ampersand</li>
 					<li>sass</li>
 					<li>jest</li>
+				</ul>
+
+				<br/>
+				<h4>Server - major libraries used:</h4>
+				<ul class='simple_list'>
+					<li>node.js</li>
+					<li>socket.io</li>
+					<li>express</li>
 				</ul>
 
 				<br/>

@@ -11,6 +11,8 @@ import Main from './views/Main'
 
 import Ttt from './views/ttt/Ttt'
 
+import LeaderBoard from './views/pages/LeaderBoard'
+
 import Txt_page from './views/pages/Txt_page'
 import PopUp_page from './views/pages/PopUp_page'
 
@@ -31,6 +33,8 @@ let renderSite = function () {
 				<Route path='/pg/(:page)' components={{mainContent: Txt_page}} />
 
 				<Route path='/ttt' components={{mainContent: Ttt}} />
+
+				<Route path='/leader-board' components={{mainContent: LeaderBoard}} />
 
 				<Route path='/pupg/(:pu_page)' components={{popup: PopUp_page}} />
 
