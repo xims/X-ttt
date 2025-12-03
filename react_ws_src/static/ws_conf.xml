@@ -33,9 +33,9 @@
 
 	<main_menu>
 		<pages>
-			<p		name="Home"						u="/"					ico="fa fa-home"		/>
-			<p		name="TTT"						u="/ttt"				ico="fa fa-play-circle"		/>
-			<p		name="Leader Board"		u="/leader-board"				ico="fa fa-trophy"		/>
+			<p		name="Home"						u="/"							ico="fa fa-home"		/>
+			<p		name="TTT"						u="/ttt"					ico="fa fa-play-circle"		/>
+			<p		name="LB"							u="/leader-board"	ico="fa fa-trophy"		/>
 			<p		name="Info"						u="/pg/info"			ico="fa fa-info"		/>
 		</pages>
 	</main_menu>

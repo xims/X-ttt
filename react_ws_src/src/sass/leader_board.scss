@@ -1,0 +1,39 @@
+section#leader_board {
+  .leader_board_header {
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .leader_board_table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-size: 18px;
+    }
+
+    tr {
+      background-color: #ffffff;
+
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+    
+    
+  }
+}

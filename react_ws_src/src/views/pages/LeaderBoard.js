@@ -10,10 +10,10 @@ export default class LeaderBoard extends Component {
     const leaderboard = app.settings.leaderboard || []
 
     return (
-      <section id='leaderboard_page'>
+      <section id='leader_board'>
         <div id='page-container'>
-          <h2>Leader Board</h2>
-          <table>
+          <h2 className="leader_board_header">Leader Board</h2>
+          <table className='leader_board_table'>
             <thead>
               <tr>
                 <th>Name</th>
@@ -26,7 +26,7 @@ export default class LeaderBoard extends Component {
             <tbody>
               {leaderboard.map((entry, index) => (
                 <tr key={index}>
-                  <td>{entry.name}</td>
+                  <td className=''>{entry.name}</td>
                   <td>{entry.opponent}</td>
                   <td>{entry.result}</td>
                   <td>{entry.game}</td>
