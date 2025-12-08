@@ -21,7 +21,11 @@
     "bu": "npm run build && npm run build:copyupd_win",
     "bv": "npm version patch",
     "build:copyall_win": "xcopy dist\\* ..\\WS\\public /E /Y /D && xcopy static\\* ..\\WS\\public /E /Y /D",
-    "build:copyupd_win": "copy dist\\bundle.js ..\\WS\\public\\ && copy dist\\style.css ..\\WS\\public\\"
+    "build:copyupd_win": "copy dist\\bundle.js ..\\WS\\public\\ && copy dist\\style.css ..\\WS\\public\\",
+    "build:cpall": "cp -R dist/* ../WS/public/ && cp -R static/* ../WS/public/",
+    "build:cpupdate": "cp dist/bundle.js ../WS/public/ && cp dist/style.css ../WS/public/",
+    "build:copy": "npm run build && npm run build:cpall",
+    "build:copyupdate": "npm run build && npm run build:cpupdate"
   },
   "dependencies": {
     "ampersand-app": "^2.0.0",
