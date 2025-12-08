@@ -7,7 +7,7 @@
 	color: #333;
 	font-family: $bodyFont;
 	@include font-size(16px);
-
+  padding-bottom: 50px;  /* added padding at the bottom to make sure content don't get covered by the footer */
 	.button {
 		@include button(179px,50px,4px,$colorSecondary,$colorSecondaryDark,#fff);
 		font-family: $hdrFont;

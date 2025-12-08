@@ -169,4 +169,53 @@ section#TTT_game{
 		}
 	}
 
+	#scoreboard {
+		padding: 5px;
+		background: #eee;	
+		margin: 10px;
+		width: 100%;
+		max-width: 300px;
+		vertical-align: middle;
+		text-align: center;
+		
+    @media (max-width: 768px) {
+		  
+			 margin: 0 auto;
+
+		}
+
+		h3 {
+			font-weight: bold;
+			margin-bottom: 15px;
+		}
+    
+
+    #scoreboard_table {
+			display:block;
+			text-align: left;
+
+			.score_row {
+				width: 100%;
+				display:flex;
+				justify-content: start;
+				align-items: start;
+				
+        .player_name {
+					font-weight: normal;
+					flex: 1;
+					margin-right: 15px;
+					text-align:right;
+				}
+
+				.player_score {
+					font-weight: bold;
+					flex: 1;
+					text-align:left;
+				}
+
+			}
+		}
+
+	}
+
 }

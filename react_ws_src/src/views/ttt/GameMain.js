@@ -7,6 +7,8 @@ import TweenMax from 'gsap'
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
 
+import ScoreBoard from './ScoreBoard'
+
 export default class GameMain extends Component { 
 
 	constructor (props) {
@@ -31,7 +33,12 @@ export default class GameMain extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: true,
-				game_stat: 'Start game'
+				game_stat: 'Start game',
+				player1_name: app.settings.curr_user.name || 'Player 1',
+				player1_score: 0,
+				player2_name: 'Computer',
+				player2_score: 0,
+				draw_score: 0,
 			}
 		else {
 			this.sock_start()
@@ -40,7 +47,12 @@ export default class GameMain extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: false,
-				game_stat: 'Connecting'
+				game_stat: 'Connecting',
+				player1_name: app.settings.curr_user.name || 'Player 1',
+				player2_name: 'Player 2',
+				player1_score: 0,
+				player2_score: 0,
+				draw_score: 0
 			}
 		}
 	}
@@ -72,7 +84,9 @@ export default class GameMain extends Component {
 			this.setState({
 				next_turn_ply: data.mode=='m',
 				game_play: true,
-				game_stat: 'Playing with ' + data.opp.name
+				game_stat: 'Playing with ' + data.opp.name,
+				player2_name: data.opp.name
+
 			})
 
 		}.bind(this));
@@ -140,6 +154,9 @@ export default class GameMain extends Component {
 					</tbody>
 					</table>
 				</div>
+			
+				<ScoreBoard player1_name={this.state.player1_name} player2_name={this.state.player2_name} player1_score={this.state.player1_score} player2_score={this.state.player2_score} draw_score={this.state.draw_score} />
+		
 				{ this.props.game_type !== 'live' && 
 				<button type="button" onClick={this.restart.bind(this)} className='button mr'><span>Restart <span className='fa fa-rotate-left'></span></span></button>} 
 				
@@ -305,11 +322,15 @@ export default class GameMain extends Component {
 
 			TweenMax.killAll(true)
 			TweenMax.from('td.win', 1, {opacity: 0, ease: Linear.easeIn})
+      
+      const userWin = cell_vals[set[0]] === 'x';
 
 			this.setState({
-				game_stat: (cell_vals[set[0]]=='x'?'You':'Opponent')+' win',
+				game_stat: (userWin ? 'You' : 'Opponent')+' win',
 				game_play: false
-			})
+				
+			});
+			userWin ? this.update_score('player1', this.state.player1_score + 1) : this.update_score('player2', this.state.player2_score + 1);
 
 			this.socket && this.socket.disconnect();
 
@@ -319,6 +340,7 @@ export default class GameMain extends Component {
 				game_stat: 'Draw',
 				game_play: false
 			})
+			this.update_score('draw', this.state.draw_score + 1);
 
 			this.socket && this.socket.disconnect();
 
@@ -365,6 +387,10 @@ export default class GameMain extends Component {
 		}});
 	}
 
-
+	update_score (player, score){
+		this.setState({
+			[player + '_score']: score
+		});
+	}
 
 }
