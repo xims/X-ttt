@@ -105,8 +105,14 @@ section#TTT_game{
 
 		&.long {
 			width: 300px;
-		}	
+		}
+
+		&.mr {
+			margin-right: 15px;
+		}
 	}
+
+
 
 	#game_stat {
 		background: #eee;

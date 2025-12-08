@@ -16,10 +16,7 @@ export default class SetGameType extends Component {
 
 				<h1>Choose game type</h1>
 
-				<button type='submit' onClick={this.selTypeLive.bind(this)} className='button long'><span>Live against another player <span className='fa fa-caret-right'></span></span></button>
-				
-				&nbsp;&nbsp;&nbsp;&nbsp;
-
+				<button type='submit' onClick={this.selTypeLive.bind(this)} className='button long mr'><span>Live against another player <span className='fa fa-caret-right'></span></span></button>
 				<button type='submit' onClick={this.selTypeComp.bind(this)} className='button long'><span>Against a computer <span className='fa fa-caret-right'></span></span></button>
 
 			</div>
