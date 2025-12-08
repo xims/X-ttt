@@ -7,7 +7,7 @@ import TweenMax from 'gsap'
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
 
-export default class SetName extends Component {
+export default class GameMain extends Component { 
 
 	constructor (props) {
 		super(props)
@@ -140,9 +140,11 @@ export default class SetName extends Component {
 					</tbody>
 					</table>
 				</div>
-
-				<button type='submit' onClick={this.end_game.bind(this)} className='button'><span>End Game <span className='fa fa-caret-right'></span></span></button>
-
+				{ this.props.game_type !== 'live' && 
+				<button type="button" onClick={this.restart.bind(this)} className='button mr'><span>Restart <span className='fa fa-rotate-left'></span></span></button>} 
+				
+				<button type='submit' onClick={this.end_game.bind(this)} className='button'><span>End Game <span className='fa fa-caret-right'></span></span></button> 
+        
 			</div>
 		)
 	}
@@ -336,6 +338,31 @@ export default class SetName extends Component {
 		this.socket && this.socket.disconnect();
 
 		this.props.onEndGame()
+	}
+
+	restart () {
+		// only reset the board if its a local game vs computer
+		if (this.props.game_type != 'live') { 
+			this.reset_board();
+		}
+	}
+
+	reset_board () {
+		// remove any 'win' classed added to the cells
+		for(let i=0; i<9; i++) {
+			this.refs['c'+(i+1)].classList.remove('win')
+		}
+
+		// reset the board to clean state, add a tween to fade out as visual cue
+		TweenMax.to('#game_board', 0.3, {opacity: 0, onComplete: () => {
+			this.setState({
+					cell_vals: {},
+					next_turn_ply: true, // player always goes first 
+					game_play: true,
+					game_stat: 'Start game'
+			})
+			TweenMax.to('#game_board', 0.3, {opacity: 1})
+		}});
 	}
 
 
