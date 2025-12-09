@@ -8,6 +8,7 @@ import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
 
 import ScoreBoard from './ScoreBoard'
+import check_win_status from '../../helpers/check_win_status'
 
 export default class GameMain extends Component { 
 
@@ -211,7 +212,7 @@ export default class GameMain extends Component {
 		let empty_cells_arr = []
 
 
-		for (let i=1; i<=9; i++) 
+		for (let i=1; i<=this.props.board_size*this.props.board_size; i++) 
 			!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
 		// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
 
@@ -289,7 +290,68 @@ export default class GameMain extends Component {
 
 		const { cell_vals } = this.state
 
-		let win = false
+		let userWin = false;
+		let oppWin = false;
+		let draw = false;
+
+		//console.log("check turn");
+
+		if (this.props.game_type!='live') {
+			this.state.game_stat = 'Play'
+		}
+
+		// check if the game is over
+	//	console.log("checking win status for cell vals: ", cell_vals);
+		const winning_cells = check_win_status(cell_vals, this.props.board_size);
+
+
+		if(winning_cells.length > 0) {
+			if(cell_vals[winning_cells[0]] === 'x') {
+				userWin = true;
+			} else {
+				oppWin = true;
+			}
+		}
+
+		const grid_size = this.props.board_size * this.props.board_size;
+
+		// check if the game is a draw	
+		if(!userWin && !oppWin && grid_size === Object.keys(cell_vals).length) {
+			draw = true;
+		}
+
+		if(userWin || oppWin) {  // either player wins
+			this.setState({
+				game_stat :(userWin ? 'You Won! :)' : 'Opponent Won! :('),
+				game_play: false,
+			});
+
+			userWin ? this.update_score('player1', this.state.player1_score + 1) : this.update_score('player2', this.state.player2_score + 1);
+      
+			//disconnect socket for live game
+			this.socket && this.socket.disconnect();
+
+		} else if (draw) { // draw
+			this.setState( {
+				game_stat: 'Draw',
+				game_play: false,
+			});
+
+			this.update_score('draw', this.state.draw_score + 1);
+
+			this.socket && this.socket.disconnect();
+
+		} else { // continue game
+			this.props.game_type!='live' && this.state.next_turn_ply && setTimeout(this.turn_comp.bind(this), rand_to_fro(500, 1000));
+
+			this.setState({
+				next_turn_ply: !this.state.next_turn_ply
+			})
+		}
+
+		
+
+		/* let win = false
 		let set
 		let fin = true
 
@@ -345,7 +407,7 @@ export default class GameMain extends Component {
 			this.setState({
 				next_turn_ply: !this.state.next_turn_ply
 			})
-		}
+		} */
 		
 	}
 

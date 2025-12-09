@@ -1,0 +1,1 @@
+jest.unmock('../check_win_status');
