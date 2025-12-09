@@ -15,18 +15,7 @@ export default class GameMain extends Component {
 	constructor (props) {
 		super(props)
 
-		this.win_sets = [
-			['c1', 'c2', 'c3'],
-			['c4', 'c5', 'c6'],
-			['c7', 'c8', 'c9'],
-
-			['c1', 'c4', 'c7'],
-			['c2', 'c5', 'c8'],
-			['c3', 'c6', 'c9'],
-
-			['c1', 'c5', 'c9'],
-			['c3', 'c5', 'c7']
-		]
+		
 
 
 		if (this.props.game_type != 'live')
@@ -48,7 +37,7 @@ export default class GameMain extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: false,
-				game_stat: 'Connecting',
+				game_stat: 'Waiting for opponent...',
 				player1_name: app.settings.curr_user.name || 'Player 1',
 				player2_name: 'Player 2',
 				player1_score: 0,
@@ -75,7 +64,10 @@ export default class GameMain extends Component {
 		this.socket.on('connect', function(data) { 
 			// console.log('socket connected', data)
 
-			this.socket.emit('new player', { name: app.settings.curr_user.name });
+			this.socket.emit('new player', { 
+				name: app.settings.curr_user.name,
+				board_size: this.props.board_size || 3  // pass the board size to the server for matching players
+			});
 
 		}.bind(this));
 
@@ -86,7 +78,8 @@ export default class GameMain extends Component {
 				next_turn_ply: data.mode=='m',
 				game_play: true,
 				game_stat: 'Playing with ' + data.opp.name,
-				player2_name: data.opp.name
+				player2_name: data.opp.name, 
+				board_size: data.board_size || 3  // get the board size from the server for the game
 
 			})
 
@@ -157,8 +150,9 @@ export default class GameMain extends Component {
 	
 					{this.generate_game_board()}
 				</div>
-				
+				{ this.props.game_type !== 'live' && 
 				<ScoreBoard player1_name={this.state.player1_name} player2_name={this.state.player2_name} player1_score={this.state.player1_score} player2_score={this.state.player2_score} draw_score={this.state.draw_score} />
+				}
 		
 				{ this.props.game_type !== 'live' && !this.state.game_play && 
 				<button type="button" onClick={this.restart.bind(this)} className='button mr'><span>Restart <span className='fa fa-rotate-left'></span></span></button>} 

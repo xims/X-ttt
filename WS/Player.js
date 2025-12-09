@@ -1,7 +1,7 @@
 /**************************************************
 ** GAME PLAYER CLASS
 **************************************************/
-var Player = function(u, n, s) {
+var Player = function(u, n, s, bs) {
 	var uid = u,
 		status = s,
 		sockid,
@@ -9,6 +9,7 @@ var Player = function(u, n, s) {
 		mode,
 		name = n,
 		opp;
+		board_size = bs;
 
 	// Define which variables and methods can be accessed
 	return {
@@ -18,7 +19,8 @@ var Player = function(u, n, s) {
 		socket: socket,
 		mode: mode,
 		name: name,
-		opp: opp
+		opp: opp,
+		board_size: board_size
 	}
 };
 
