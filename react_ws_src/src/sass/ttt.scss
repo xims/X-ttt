@@ -112,6 +112,20 @@ section#TTT_game{
 		}
 	}
 
+	#board_size_selector {
+    
+    label {
+			@include font-size(18px);
+			font-weight: bold;
+		}
+
+		select {
+			border: 1px solid #ebe6f1;
+			padding: 5px 15px;
+			
+		}
+	}
+
 
 
 	#game_stat {
@@ -133,7 +147,7 @@ section#TTT_game{
 			@include font-size(22px);
 		}
 	}
-
+  
 	#game_board {
 			// padding: 10px;
 
@@ -145,7 +159,7 @@ section#TTT_game{
 		td {
 			width: 130px;
 			height: 130px;
-
+		
 			vertical-align: middle;
 			text-align: center;
 
@@ -167,6 +181,34 @@ section#TTT_game{
 			border-top: 7px solid #000;
 			border-bottom: 7px solid #000;
 		}
+	}
+
+	#dynamic_game_board {
+		width: 100%;
+		max-width: 450px;
+		display: grid;
+		margin-bottom: 15px;
+	
+		.cell {
+			border: 3px solid #000;
+			border-collapse: collapse;
+		  display: flex;
+			aspect-ratio: 1/1;
+			background: #fff;
+			align-items: center;
+			justify-content: center;
+
+			&:hover {
+				background: #ff0;
+			}
+
+			&.win {
+				background: #f00;
+			}
+		}
+
+		
+		
 	}
 
 	#scoreboard {

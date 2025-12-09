@@ -12,7 +12,8 @@ export default class Ttt extends Component {
 		super(props)
 
 		this.state = {
-			game_step: this.set_game_step()
+			game_step: this.set_game_step(),
+			board_size: 3
 		}
 	}
 
@@ -39,9 +40,11 @@ export default class Ttt extends Component {
 
 					{game_step == 'set_game_type' && <SetGameType 
 														onSetType={this.saveGameType.bind(this)} 
+														onSelectBoardSize={this.setBoardSize.bind(this)}
 													/>}
 					{game_step == 'start_game' && <GameMain 
 														game_type={this.state.game_type}
+														board_size={this.state.board_size}
 														onEndGame={this.gameEnd.bind(this)} 
 													/>}
 
@@ -67,10 +70,15 @@ export default class Ttt extends Component {
 		this.upd_game_step()
 	}
 
+	setBoardSize (s) {
+		this.state.board_size = s
+	}
+
 //	------------------------	------------------------	------------------------
 
 	gameEnd (t) {
 		this.state.game_type = null
+		this.state.board_size = 3
 
 		this.upd_game_step()
 	}

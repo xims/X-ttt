@@ -5,7 +5,9 @@ export default class SetGameType extends Component {
 	constructor (props) {
 		super(props)
 
-		this.state = {}
+		this.state = {
+
+		}
 	}
 
 //	------------------------	------------------------	------------------------
@@ -15,6 +17,14 @@ export default class SetGameType extends Component {
 			<div id='SetGameType'>
 
 				<h1>Choose game type</h1>
+				<div id="board_size_selector">
+					<label htmlFor="board_size">Board size: </label>
+					<select name="board_size" id="board_size" onChange={this.selectBoardSize.bind(this)}>
+						<option value="3" defaultValue>3 x 3</option>
+						<option value="4">4 x 4</option>
+						<option value="5">5 x 5</option>
+					</select>
+				</div>
 
 				<button type='submit' onClick={this.selTypeLive.bind(this)} className='button long mr'><span>Live against another player <span className='fa fa-caret-right'></span></span></button>
 				<button type='submit' onClick={this.selTypeComp.bind(this)} className='button long'><span>Against a computer <span className='fa fa-caret-right'></span></span></button>
@@ -42,5 +52,10 @@ export default class SetGameType extends Component {
 
 		this.props.onSetType('comp')
 	}
+
+
+ selectBoardSize (e) {
+	this.props.onSelectBoardSize(e.target.value)
+ }
 
 }
