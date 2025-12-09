@@ -28,7 +28,7 @@ https://x-ttt.herokuapp.com/ws_conf.xml
 
 ---
 
-##For demonstration purposes only.
+## For demonstration purposes only.
 
 =================================================================
 
@@ -47,3 +47,7 @@ To test the project locally
 
 5. Run the front end app
     `cd react_ws_src/ && npm start` 
+
+
+
+## Scope of this update
