@@ -6,6 +6,7 @@ import TweenMax from 'gsap'
 
 import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
+import { AVATAR_OPTS } from './avatarOptions'
 
 export default class SetName extends Component {
 
@@ -31,7 +32,8 @@ export default class SetName extends Component {
 				cell_vals: {},
 				next_turn_ply: true,
 				game_play: true,
-				game_stat: 'Start game'
+				game_stat: 'Start game',
+				opp_avatar: this.get_comp_avatar()
 			}
 		else {
 			this.sock_start()
@@ -62,7 +64,10 @@ export default class SetName extends Component {
 		this.socket.on('connect', function(data) { 
 			// console.log('socket connected', data)
 
-			this.socket.emit('new player', { name: app.settings.curr_user.name });
+			this.socket.emit('new player', {
+				name: app.settings.curr_user.name,
+				avatar: app.settings.curr_user.avatar
+			});
 
 		}.bind(this));
 
@@ -72,7 +77,8 @@ export default class SetName extends Component {
 			this.setState({
 				next_turn_ply: data.mode=='m',
 				game_play: true,
-				game_stat: 'Playing with ' + data.opp.name
+				game_stat: 'Playing with ' + data.opp.name,
+				opp_avatar: data.opp.avatar
 			})
 
 		}.bind(this));
@@ -94,12 +100,27 @@ export default class SetName extends Component {
 
 //	------------------------	------------------------	------------------------
 
+	get_comp_avatar () {
+		const ply_avatar = app.settings.curr_user && app.settings.curr_user.avatar
+
+		if (ply_avatar == '❌') return '⭕'
+		if (ply_avatar == '⭕') return '❌'
+
+		const comp_opts = AVATAR_OPTS.filter(function (a) { return a != ply_avatar })
+
+		return rand_arr_elem(comp_opts.length ? comp_opts : AVATAR_OPTS)
+	}
+
+//	------------------------	------------------------	------------------------
+
 	cell_cont (c) {
 		const { cell_vals } = this.state
+		const user_avatar = (app.settings.curr_user && app.settings.curr_user.avatar) ? app.settings.curr_user.avatar : '❌'
+		const opp_avatar = this.state.opp_avatar || '⭕'
 
 		return (<div>
-		        	{cell_vals && cell_vals[c]=='x' && <i className="fa fa-times fa-5x"></i>}
-					{cell_vals && cell_vals[c]=='o' && <i className="fa fa-circle-o fa-5x"></i>}
+		        	{cell_vals && cell_vals[c]=='x' && <span style={{ fontSize: '64px', lineHeight: 1 }}>{user_avatar}</span>}
+					{cell_vals && cell_vals[c]=='o' && <span style={{ fontSize: '64px', lineHeight: 1 }}>{opp_avatar}</span>}
 				</div>)
 	}
 
@@ -229,7 +250,7 @@ export default class SetName extends Component {
 
 		TweenMax.from(this.refs[cell_id], 0.7, {opacity: 0, scaleX:0, scaleY:0, ease: Power4.easeOut})
 
-		this.socket.emit('ply_turn', { cell_id: cell_id });
+		this.socket.emit('ply_turn', { cell_id });
 
 		// this.setState({
 		// 	cell_vals: cell_vals,

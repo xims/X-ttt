@@ -52,9 +52,10 @@ export default class Ttt extends Component {
 
 //	------------------------	------------------------	------------------------
 
-	saveUserName (n) {
+	saveUserName (n, a) {
 		app.settings.curr_user = {}
 		app.settings.curr_user.name = n
+		app.settings.curr_user.avatar = a
 
 		this.upd_game_step()
 	}
