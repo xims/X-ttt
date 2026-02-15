@@ -1,4 +1,40 @@
 section#TTT_game {
+  .welcome_step_wrapper {
+    position: relative;
+    padding-top: 56px;
+  }
+
+  .back_to_name_btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid #ebe6f1;
+    border-radius: 12px;
+    background: #fff;
+    color: #555;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease,
+      color 0.15s ease;
+
+    .fa {
+      font-size: 20px;
+    }
+
+    &:hover {
+      border-color: #b9a5d8;
+      background: #faf8ff;
+      color: $colorSecondary;
+    }
+  }
+
   #SetGameType {
     .grid_size_picker {
       margin-bottom: 24px;

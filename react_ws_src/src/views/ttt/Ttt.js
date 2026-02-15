@@ -28,11 +28,23 @@ export default class Ttt extends Component {
 			<section id='TTT_game'>
 				<div id='page-container'>
 					{game_step == 'set_name' && <SetName 
-														onSetName={this.saveUserName.bind(this)} 
+														onSetName={this.saveUserName.bind(this)}
+														initialName={app.settings.curr_user && app.settings.curr_user.name}
+														initialAvatar={app.settings.curr_user && app.settings.curr_user.avatar}
 												/>}
 
 					{game_step != 'set_name' && 
-						<div>
+						<div className='welcome_step_wrapper'>
+							{game_step == 'set_game_type' && (
+								<button
+									type='button'
+									className='back_to_name_btn'
+									onClick={this.goBackToSetName.bind(this)}
+									aria-label='Back to edit name and avatar'
+								>
+									<span className='fa fa-arrow-left' />
+								</button>
+							)}
 							<h2>Welcome, {app.settings.curr_user.name}</h2>
 						</div>
 					}
@@ -49,6 +61,12 @@ export default class Ttt extends Component {
 				</div>
 			</section>
 		)
+	}
+
+//	------------------------	------------------------	------------------------
+
+	goBackToSetName () {
+		this.setState({ game_step: 'set_name' })
 	}
 
 //	------------------------	------------------------	------------------------

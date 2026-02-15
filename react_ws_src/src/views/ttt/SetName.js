@@ -6,8 +6,11 @@ export default class SetName extends Component {
     super(props);
 
     this.avatar_opts = AVATAR_OPTS;
+    const initialAvatar = props.initialAvatar && this.avatar_opts.indexOf(props.initialAvatar) !== -1
+      ? props.initialAvatar
+      : this.avatar_opts[0];
     this.state = {
-      avatar: this.avatar_opts[0],
+      avatar: initialAvatar,
       name_error: '',
     };
   }
@@ -32,6 +35,7 @@ export default class SetName extends Component {
               type="text"
               className="input name"
               placeholder="Name"
+              defaultValue={this.props.initialName || ''}
               onChange={this.onNameChange.bind(this)}
             />
             {name_error && <div className="name_error_msg">{name_error}</div>}
@@ -96,3 +100,9 @@ export default class SetName extends Component {
     this.props.onSetName(name, this.state.avatar);
   }
 }
+
+SetName.propTypes = {
+  onSetName: React.PropTypes.func.isRequired,
+  initialName: React.PropTypes.string,
+  initialAvatar: React.PropTypes.string,
+};
