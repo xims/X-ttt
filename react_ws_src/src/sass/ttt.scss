@@ -25,7 +25,10 @@ section#TTT_game {
         border-radius: 12px;
         background: #fff;
         cursor: pointer;
-        transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+        transition:
+          border-color 0.15s ease,
+          background 0.15s ease,
+          box-shadow 0.15s ease;
         font-family: inherit;
         font-size: 18px;
         color: #555;
@@ -245,42 +248,90 @@ section#TTT_game {
     }
   }
 
-  #game_stat {
-    background: #eee;
-    margin: 10px;
-    width: 300px;
-    height: 90px;
-    vertical-align: middle;
+  #GameMain {
+    width: 100%;
+  }
+
+  .game_page_actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+
+    .button {
+      margin-top: 0;
+    }
+  }
+
+  .game_instruction {
     text-align: center;
-    padding-top: 10px;
+    color: $colorSecondary;
+    font-weight: 600;
+    @include font-size(22px);
+    letter-spacing: 0.02em;
+  }
+
+  #game_stat {
+    margin: 0 auto 20px;
+    min-height: 72px;
+    text-align: center;
     font-family: $hdrFont;
 
     #game_stat_msg {
       @include font-size(28px);
+      font-weight: 600;
+      color: $colorSecondary;
+      letter-spacing: 0.02em;
     }
 
     #game_turn_msg {
-      padding-top: 5px;
-      @include font-size(22px);
+      margin-top: 6px;
+      @include font-size(18px);
+      font-weight: 400;
+      color: #666;
+    }
+  }
+
+  #game_board_container {
+    width: 100%;
+    margin: auto;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 20px;
+
+    .game_instruction {
+      align-self: stretch;
+      margin-top: 20px;
+      margin-bottom: 20px;
     }
   }
 
   #game_board {
+    display: block;
+    width: fit-content;
+
     table {
-      background: #fff;
-      margin: 10px;
+      border-collapse: separate;
+      border-spacing: 8px;
     }
 
     td {
       vertical-align: middle;
       text-align: center;
+      background: #e5ddf0;
+      border: none;
+      border-radius: 12px;
 
       &:hover {
-        background: #ff0;
+        background: #ddd0e8;
       }
 
       &.win {
-        background: #f00;
+        background: rgba(255, 200, 80, 0.5);
       }
     }
 
@@ -298,15 +349,55 @@ section#TTT_game {
       width: 75px;
       height: 75px;
     }
+  }
 
-    .vbrd {
-      border-left: 7px solid #000;
-      border-right: 7px solid #000;
+  .game_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .game_result_modal {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px 40px;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+
+    .game_result_message {
+      margin: 0 0 28px;
+      @include font-size(22px);
+      font-weight: 600;
+      color: #333;
+      line-height: 1.4;
     }
 
-    .hbrd {
-      border-top: 7px solid #000;
-      border-bottom: 7px solid #000;
+    .game_result_actions {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: nowrap;
+
+      .button {
+        margin-top: 0;
+        margin-bottom: 0;
+        width: 140px;
+
+        &:active {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+      }
     }
   }
 }
