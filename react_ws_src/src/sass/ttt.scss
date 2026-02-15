@@ -436,4 +436,129 @@ section#TTT_game {
       }
     }
   }
+
+  // Mobile-friendly game board
+  @media (max-width: 768px) {
+    #page-container {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    #GameMain {
+      h1 {
+        @include font-size(20px);
+        margin-bottom: 12px;
+      }
+    }
+
+    #game_board_container {
+      padding: 16px 12px;
+      margin-left: -12px;
+      margin-right: -12px;
+      width: calc(100% + 24px);
+      max-width: 100vw;
+      border-radius: 16px;
+    }
+
+    #game_stat {
+      min-height: 56px;
+      margin-bottom: 12px;
+
+      #game_stat_msg {
+        @include font-size(20px);
+      }
+
+      #game_turn_msg {
+        @include font-size(15px);
+        margin-top: 4px;
+      }
+    }
+
+    #game_board {
+      width: fit-content;
+      max-width: calc(100vw - 48px);
+      margin: 0 auto;
+
+      table {
+        border-spacing: 4px;
+      }
+
+      td {
+        border-radius: 10px;
+      }
+
+      &.grid-3 td {
+        width: 26vmin;
+        height: 26vmin;
+        max-width: 100px;
+        max-height: 100px;
+
+        > div span {
+          font-size: 10vmin !important;
+        }
+      }
+
+      &.grid-4 td {
+        width: 20vmin;
+        height: 20vmin;
+        max-width: 72px;
+        max-height: 72px;
+
+        > div span {
+          font-size: 7vmin !important;
+        }
+      }
+
+      &.grid-5 td {
+        width: 16vmin;
+        height: 16vmin;
+        max-width: 58px;
+        max-height: 58px;
+
+        > div span {
+          font-size: 5.5vmin !important;
+        }
+      }
+    }
+
+    .game_instruction {
+      @include font-size(16px);
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+
+    .game_page_actions {
+      margin-top: 16px;
+      gap: 10px;
+      padding: 0 4px;
+
+      .button {
+        min-height: 48px;
+        min-width: 120px;
+        padding: 0 20px;
+        @include font-size(16px);
+      }
+    }
+
+    .game_result_modal {
+      margin: 16px;
+      padding: 24px 20px;
+      max-width: calc(100vw - 32px);
+
+      .game_result_message {
+        @include font-size(18px);
+        margin-bottom: 20px;
+      }
+
+      .game_result_actions {
+        flex-direction: column;
+        gap: 10px;
+
+        .button {
+          width: 100%;
+          min-height: 48px;
+        }
+      }
+    }
+  }
 }

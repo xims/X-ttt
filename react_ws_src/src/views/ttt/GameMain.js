@@ -246,7 +246,8 @@ export default class SetName extends Component {
         </div>
 
         <div className="game_page_actions">
-          {!this.state.game_play && (
+          {!this.state.game_play &&
+            !(this.props.game_type === 'live' && this.state.game_stat === 'Connecting') && (
             <button
               type="button"
               onClick={this.retry_game.bind(this)}
