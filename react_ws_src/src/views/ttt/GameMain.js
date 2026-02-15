@@ -8,24 +8,41 @@ import rand_arr_elem from '../../helpers/rand_arr_elem'
 import rand_to_fro from '../../helpers/rand_to_fro'
 import { AVATAR_OPTS } from './avatarOptions'
 
+function buildWinSets (n) {
+		const sets = []
+		const nc = n * n
+		// rows
+		for (let r = 0; r < n; r++) {
+			const row = []
+			for (let c = 0; c < n; c++) row.push('c' + (r * n + c + 1))
+			sets.push(row)
+		}
+		// cols
+		for (let c = 0; c < n; c++) {
+			const col = []
+			for (let r = 0; r < n; r++) col.push('c' + (r * n + c + 1))
+			sets.push(col)
+		}
+		// main diag
+		const diag1 = []
+		for (let i = 0; i < n; i++) diag1.push('c' + (i * n + i + 1))
+		sets.push(diag1)
+		// anti-diag
+		const diag2 = []
+		for (let i = 0; i < n; i++) diag2.push('c' + ((i + 1) * n - i))
+		sets.push(diag2)
+		return sets
+	}
+
 export default class SetName extends Component {
 
 	constructor (props) {
 		super(props)
 
-		this.win_sets = [
-			['c1', 'c2', 'c3'],
-			['c4', 'c5', 'c6'],
-			['c7', 'c8', 'c9'],
-
-			['c1', 'c4', 'c7'],
-			['c2', 'c5', 'c8'],
-			['c3', 'c6', 'c9'],
-
-			['c1', 'c5', 'c9'],
-			['c3', 'c5', 'c7']
-		]
-
+		const gridSize = props.grid_size || 3
+		this.win_sets = buildWinSets(gridSize)
+		this.gridSize = gridSize
+		this.totalCells = gridSize * gridSize
 
 		if (this.props.game_type != 'live')
 			this.state = {
@@ -117,10 +134,11 @@ export default class SetName extends Component {
 		const { cell_vals } = this.state
 		const user_avatar = (app.settings.curr_user && app.settings.curr_user.avatar) ? app.settings.curr_user.avatar : '❌'
 		const opp_avatar = this.state.opp_avatar || '⭕'
+		const size = this.gridSize === 3 ? 64 : this.gridSize === 4 ? 48 : 38
 
 		return (<div>
-		        	{cell_vals && cell_vals[c]=='x' && <span style={{ fontSize: '64px', lineHeight: 1 }}>{user_avatar}</span>}
-					{cell_vals && cell_vals[c]=='o' && <span style={{ fontSize: '64px', lineHeight: 1 }}>{opp_avatar}</span>}
+		        	{cell_vals && cell_vals[c]=='x' && <span style={{ fontSize: size + 'px', lineHeight: 1 }}>{user_avatar}</span>}
+					{cell_vals && cell_vals[c]=='o' && <span style={{ fontSize: size + 'px', lineHeight: 1 }}>{opp_avatar}</span>}
 				</div>)
 	}
 
@@ -140,24 +158,22 @@ export default class SetName extends Component {
 					{this.state.game_play && <div id="game_turn_msg">{this.state.next_turn_ply ? 'Your turn' : 'Opponent turn'}</div>}
 				</div>
 
-				<div id="game_board">
+				<div id="game_board" className={'grid-' + this.gridSize}>
 					<table>
 					<tbody>
-						<tr>
-							<td id='game_board-c1' ref='c1' onClick={this.click_cell.bind(this)}> {this.cell_cont('c1')} </td>
-							<td id='game_board-c2' ref='c2' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c2')} </td>
-							<td id='game_board-c3' ref='c3' onClick={this.click_cell.bind(this)}> {this.cell_cont('c3')} </td>
-						</tr>
-						<tr>
-							<td id='game_board-c4' ref='c4' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c4')} </td>
-							<td id='game_board-c5' ref='c5' onClick={this.click_cell.bind(this)} className="vbrd hbrd"> {this.cell_cont('c5')} </td>
-							<td id='game_board-c6' ref='c6' onClick={this.click_cell.bind(this)} className="hbrd"> {this.cell_cont('c6')} </td>
-						</tr>
-						<tr>
-							<td id='game_board-c7' ref='c7' onClick={this.click_cell.bind(this)}> {this.cell_cont('c7')} </td>
-							<td id='game_board-c8' ref='c8' onClick={this.click_cell.bind(this)} className="vbrd"> {this.cell_cont('c8')} </td>
-							<td id='game_board-c9' ref='c9' onClick={this.click_cell.bind(this)}> {this.cell_cont('c9')} </td>
-						</tr>
+						{Array.from({ length: this.gridSize }, (_, r) => (
+							<tr key={r}>
+								{Array.from({ length: this.gridSize }, (_, c) => {
+									const cellId = 'c' + (r * this.gridSize + c + 1)
+									const cls = (c < this.gridSize - 1 ? ' vbrd' : '') + (r < this.gridSize - 1 ? ' hbrd' : '')
+									return (
+										<td key={cellId} id={'game_board-' + cellId} ref={cellId} onClick={this.click_cell.bind(this)} className={cls.trim()}>
+											{this.cell_cont(cellId)}
+										</td>
+									)
+								})}
+							</tr>
+						))}
 					</tbody>
 					</table>
 				</div>
@@ -217,9 +233,8 @@ export default class SetName extends Component {
 		let { cell_vals } = this.state
 		let empty_cells_arr = []
 
-
-		for (let i=1; i<=9; i++) 
-			!cell_vals['c'+i] && empty_cells_arr.push('c'+i)
+		for (let i = 1; i <= this.totalCells; i++)
+			!cell_vals['c' + i] && empty_cells_arr.push('c' + i)
 		// console.log(cell_vals, empty_cells_arr, rand_arr_elem(empty_cells_arr))
 
 		const c = rand_arr_elem(empty_cells_arr)
@@ -304,23 +319,20 @@ export default class SetName extends Component {
 			this.state.game_stat = 'Play'
 
 
-		for (let i=0; !win && i<this.win_sets.length; i++) {
+		for (let i = 0; !win && i < this.win_sets.length; i++) {
 			set = this.win_sets[i]
-			if (cell_vals[set[0]] && cell_vals[set[0]]==cell_vals[set[1]] && cell_vals[set[0]]==cell_vals[set[2]])
+			const first = cell_vals[set[0]]
+			if (first && set.every(c => cell_vals[c] === first))
 				win = true
 		}
 
-
-		for (let i=1; i<=9; i++) 
-			!cell_vals['c'+i] && (fin = false)
+		for (let i = 1; i <= this.totalCells; i++)
+			!cell_vals['c' + i] && (fin = false)
 
 		// win && console.log('win set: ', set)
 
 		if (win) {
-		
-			this.refs[set[0]].classList.add('win')
-			this.refs[set[1]].classList.add('win')
-			this.refs[set[2]].classList.add('win')
+			set.forEach(c => this.refs[c] && this.refs[c].classList.add('win'))
 
 			TweenMax.killAll(true)
 			TweenMax.from('td.win', 1, {opacity: 0, ease: Linear.easeIn})

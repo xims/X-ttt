@@ -1,4 +1,64 @@
 section#TTT_game {
+  #SetGameType {
+    .grid_size_picker {
+      margin-bottom: 24px;
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 300;
+        @include font-size(16px);
+      }
+
+      .grid_options {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      .grid_option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 24px;
+        border: 1px solid #ebe6f1;
+        border-radius: 12px;
+        background: #fff;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+        font-family: inherit;
+        font-size: 18px;
+        color: #555;
+
+        &:hover {
+          border-color: #b9a5d8;
+          background: #faf8ff;
+        }
+
+        &.active {
+          border-color: $colorSecondary;
+          background: #f8f3ff;
+          box-shadow: 0 0 0 2px rgba(170, 96, 255, 0.18);
+          color: #333;
+        }
+
+        .grid_icon {
+          .grid_cell {
+            display: block;
+            width: 8px;
+            height: 8px;
+            background: #c4b5d8;
+            border-radius: 2px;
+          }
+
+          &.active .grid_cell {
+            background: $colorSecondary;
+          }
+        }
+      }
+    }
+  }
+
   #SetName {
     max-width: 560px;
     margin: 0 auto;
@@ -206,17 +266,12 @@ section#TTT_game {
   }
 
   #game_board {
-    // padding: 10px;
-
     table {
       background: #fff;
       margin: 10px;
     }
 
     td {
-      width: 130px;
-      height: 130px;
-
       vertical-align: middle;
       text-align: center;
 
@@ -227,6 +282,21 @@ section#TTT_game {
       &.win {
         background: #f00;
       }
+    }
+
+    &.grid-3 td {
+      width: 130px;
+      height: 130px;
+    }
+
+    &.grid-4 td {
+      width: 95px;
+      height: 95px;
+    }
+
+    &.grid-5 td {
+      width: 75px;
+      height: 75px;
     }
 
     .vbrd {

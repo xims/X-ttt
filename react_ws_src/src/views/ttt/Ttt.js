@@ -42,6 +42,7 @@ export default class Ttt extends Component {
 													/>}
 					{game_step == 'start_game' && <GameMain 
 														game_type={this.state.game_type}
+														grid_size={this.state.grid_size || 3}
 														onEndGame={this.gameEnd.bind(this)} 
 													/>}
 
@@ -62,8 +63,9 @@ export default class Ttt extends Component {
 
 //	------------------------	------------------------	------------------------
 
-	saveGameType (t) {
+	saveGameType (t, gridSize) {
 		this.state.game_type = t
+		this.state.grid_size = gridSize || 3
 
 		this.upd_game_step()
 	}
@@ -72,6 +74,7 @@ export default class Ttt extends Component {
 
 	gameEnd (t) {
 		this.state.game_type = null
+		this.state.grid_size = null
 
 		this.upd_game_step()
 	}
