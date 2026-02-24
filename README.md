@@ -28,4 +28,8 @@ https://x-ttt.herokuapp.com/ws_conf.xml
 
 ---
 
+This project was built on Node 6.
+
+---
+
 ##For demonstration purposes only.
